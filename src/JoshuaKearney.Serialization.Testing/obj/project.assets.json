@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
-      "JoshuaKearney.Core/2.1.0-alpha": {
+      "JoshuaKearney.Core/2.1.1-alpha": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.1"
@@ -209,11 +209,11 @@
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
       },
-      "JoshuaKearney.Serialization/1.0.0": {
+      "JoshuaKearney.Serialization/1.0.0-alpha": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
-          "JoshuaKearney.Core": "2.1.0-alpha",
+          "JoshuaKearney.Core": "2.1.1-alpha",
           "NETStandard.Library": "1.6.1"
         },
         "compile": {
@@ -226,12 +226,12 @@
     }
   },
   "libraries": {
-    "JoshuaKearney.Core/2.1.0-alpha": {
-      "sha512": "KaxpMFU5be+Ne1Y5OGakOwcJouUdfv8n7CqMpZgXMCFyOK2oyOl+zXSaJUoWs12jYUsYYa3hclLeOPhDpeQnRA==",
+    "JoshuaKearney.Core/2.1.1-alpha": {
+      "sha512": "4WlJSpuqc/Sw44HoXNw/NCCoP078gmyWx9s8QqPSoOvg8O1lkSNHfT0u8c3Ko9bujZjELNnjvjgvp8SC1QPPmA==",
       "type": "package",
-      "path": "joshuakearney.core/2.1.0-alpha",
+      "path": "joshuakearney.core/2.1.1-alpha",
       "files": [
-        "joshuakearney.core.2.1.0-alpha.nupkg.sha512",
+        "joshuakearney.core.2.1.1-alpha.nupkg.sha512",
         "joshuakearney.core.nuspec",
         "lib/net40/JoshuaKearney.Core.dll",
         "lib/netstandard1.0/JoshuaKearney.Core.dll"
@@ -694,7 +694,7 @@
         "netstandard.library.nuspec"
       ]
     },
-    "JoshuaKearney.Serialization/1.0.0": {
+    "JoshuaKearney.Serialization/1.0.0-alpha": {
       "type": "project",
       "path": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj",
       "msbuildProject": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj"
@@ -702,8 +702,8 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
-      "JoshuaKearney.Core >= 2.1.0-alpha",
-      "JoshuaKearney.Serialization >= 1.0.0",
+      "JoshuaKearney.Core >= 2.1.1-alpha",
+      "JoshuaKearney.Serialization >= 1.0.0-alpha",
       "Microsoft.NETCore.App >= 2.0.0"
     ]
   },
@@ -735,6 +735,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\joshw\\.dotnet\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -757,7 +758,7 @@
         "dependencies": {
           "JoshuaKearney.Core": {
             "target": "Package",
-            "version": "2.1.0-alpha"
+            "version": "2.1.1-alpha"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",

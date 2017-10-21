@@ -1,5 +1,4 @@
-﻿using JoshuaKearney.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,25 @@ namespace JoshuaKearney.Serialization {
         IBinarySerializer Write(ArraySegment<byte> bytes);
     }
 
-    public static class WriterExtensions {
+    public static partial class SerializationExtensions {
+        public static IBinarySerializer WriteBlocks(this IBinarySerializer writer, IEnumerable<IBinarySerializer> writers) {
+            int count;
+
+            if (writers is ICollection<IBinarySerializer> collection) {
+                count = collection.Count;
+            }
+            else if (writers is IReadOnlyCollection<IBinarySerializer> readCollection) {
+                count = readCollection.Count;
+            }
+            else {
+                count = writers.Count();
+            }
+
+            writer.Write(count);
+
+            foreach ()
+        }
+
         public static IBinarySerializer Write(this IBinarySerializer writer, IBinarySerializable writable) {
             writable.WriteTo(writer);
             return writer;
@@ -34,7 +51,7 @@ namespace JoshuaKearney.Serialization {
 
         public static IBinarySerializer Write(this IBinarySerializer writer, long item) {
             return writer.Write(BitConverter.GetBytes(item));
-        }
+        }   
 
         public static IBinarySerializer Write(this IBinarySerializer writer, float item) {
             return writer.Write(BitConverter.GetBytes(item));

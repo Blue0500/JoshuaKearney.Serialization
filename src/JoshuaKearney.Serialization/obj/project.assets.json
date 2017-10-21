@@ -1,8 +1,19 @@
 {
   "version": 3,
   "targets": {
+    ".NETFramework,Version=v4.5": {
+      "JoshuaKearney.Core/2.1.1-alpha": {
+        "type": "package",
+        "compile": {
+          "lib/net40/JoshuaKearney.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net40/JoshuaKearney.Core.dll": {}
+        }
+      }
+    },
     ".NETStandard,Version=v1.3": {
-      "JoshuaKearney.Core/2.1.0-alpha": {
+      "JoshuaKearney.Core/2.1.1-alpha": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.1"
@@ -902,12 +913,12 @@
     }
   },
   "libraries": {
-    "JoshuaKearney.Core/2.1.0-alpha": {
-      "sha512": "KaxpMFU5be+Ne1Y5OGakOwcJouUdfv8n7CqMpZgXMCFyOK2oyOl+zXSaJUoWs12jYUsYYa3hclLeOPhDpeQnRA==",
+    "JoshuaKearney.Core/2.1.1-alpha": {
+      "sha512": "4WlJSpuqc/Sw44HoXNw/NCCoP078gmyWx9s8QqPSoOvg8O1lkSNHfT0u8c3Ko9bujZjELNnjvjgvp8SC1QPPmA==",
       "type": "package",
-      "path": "joshuakearney.core/2.1.0-alpha",
+      "path": "joshuakearney.core/2.1.1-alpha",
       "files": [
-        "joshuakearney.core.2.1.0-alpha.nupkg.sha512",
+        "joshuakearney.core.2.1.1-alpha.nupkg.sha512",
         "joshuakearney.core.nuspec",
         "lib/net40/JoshuaKearney.Core.dll",
         "lib/netstandard1.0/JoshuaKearney.Core.dll"
@@ -3721,8 +3732,11 @@
     }
   },
   "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.5": [
+      "JoshuaKearney.Core >= 2.1.1-alpha"
+    ],
     ".NETStandard,Version=v1.3": [
-      "JoshuaKearney.Core >= 2.1.0-alpha",
+      "JoshuaKearney.Core >= 2.1.1-alpha",
       "NETStandard.Library >= 1.6.1"
     ]
   },
@@ -3731,7 +3745,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.0.0-alpha",
     "restoreSettings": {
       "hideWarningsAndErrors": true
     },
@@ -3742,6 +3756,7 @@
       "packagesPath": "C:\\Users\\joshw\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\obj\\",
       "projectStyle": "PackageReference",
+      "crossTargeting": true,
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
@@ -3750,13 +3765,18 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "netstandard1.3"
+        "netstandard1.3",
+        "net45"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\joshw\\.dotnet\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
+        "net45": {
+          "projectReferences": {}
+        },
         "netstandard1.3": {
           "projectReferences": {}
         }
@@ -3768,11 +3788,19 @@
       }
     },
     "frameworks": {
+      "net45": {
+        "dependencies": {
+          "JoshuaKearney.Core": {
+            "target": "Package",
+            "version": "2.1.1-alpha"
+          }
+        }
+      },
       "netstandard1.3": {
         "dependencies": {
           "JoshuaKearney.Core": {
             "target": "Package",
-            "version": "2.1.0-alpha"
+            "version": "2.1.1-alpha"
           },
           "NETStandard.Library": {
             "target": "Package",

@@ -1,15 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
+    <Version>1.0.0-alpha</Version>
+    <Authors>Josh Kearney</Authors>
+    <Title>JoshuaKearney.Serialization</Title>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Blue0500/JoshuaKearney.Serialization/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Blue0500/JoshuaKearney.Serialization</PackageProjectUrl>
+    <Copyright>Copyright © 2017 Josh Kearney</Copyright>
+    <Company>Josh Kearney</Company>
+    <Description>A small library to make serialization and deserialization to bytes simpler and easier</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.3|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="JoshuaKearney.Core" Version="2.1.0-alpha" />
+    <PackageReference Include="JoshuaKearney.Core" Version="2.1.1-alpha" />
   </ItemGroup>
 
 </Project>

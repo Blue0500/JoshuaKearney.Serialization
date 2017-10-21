@@ -1,0 +1,9 @@
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.csproj.CoreCompileInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.AssemblyInfoInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.AssemblyInfo.cs
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Debug\net45\JoshuaKearney.Serialization.dll
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Debug\net45\JoshuaKearney.Serialization.pdb
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Debug\net45\JoshuaKearney.Core.dll
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.dll
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.pdb
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.csprojResolveAssemblyReference.cache

@@ -1,0 +1,3 @@
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\net45\JoshuaKearney.Serialization.csproj.CoreCompileInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\net45\JoshuaKearney.Serialization.AssemblyInfoInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\net45\JoshuaKearney.Serialization.AssemblyInfo.cs

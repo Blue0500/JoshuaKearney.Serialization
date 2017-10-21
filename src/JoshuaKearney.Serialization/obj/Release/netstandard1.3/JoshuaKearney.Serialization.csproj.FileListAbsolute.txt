@@ -1,0 +1,8 @@
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\netstandard1.3\JoshuaKearney.Serialization.deps.json
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\netstandard1.3\JoshuaKearney.Serialization.dll
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\netstandard1.3\JoshuaKearney.Serialization.pdb
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\netstandard1.3\JoshuaKearney.Serialization.csproj.CoreCompileInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\netstandard1.3\JoshuaKearney.Serialization.AssemblyInfoInputs.cache
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\netstandard1.3\JoshuaKearney.Serialization.AssemblyInfo.cs
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\netstandard1.3\JoshuaKearney.Serialization.dll
+C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Release\netstandard1.3\JoshuaKearney.Serialization.pdb

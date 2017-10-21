@@ -1,5 +1,4 @@
-﻿using JoshuaKearney.Core;
-using System;
+﻿using System;
 using System.Text;
 
 namespace JoshuaKearney.Serialization.Testing {

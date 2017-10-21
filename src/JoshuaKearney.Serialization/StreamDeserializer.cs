@@ -45,6 +45,7 @@ namespace JoshuaKearney.Serialization {
                     return true;
                 }
                 else {
+                    buffer = default;
                     return false;
                 }
             }

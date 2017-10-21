@@ -1,5 +1,4 @@
-﻿using JoshuaKearney.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace JoshuaKearney.Serialization {
         void Reset();
     }
 
-    public static class MessageReaderExtensions {
+    public static partial class SerializationExtensions {
         public static ArraySegment<byte> ReadBytes(this IBinaryDeserializer reader, int count) {
             if (!reader.TryReadBytes(count, out var bytes)) {
                 throw new InvalidOperationException();
