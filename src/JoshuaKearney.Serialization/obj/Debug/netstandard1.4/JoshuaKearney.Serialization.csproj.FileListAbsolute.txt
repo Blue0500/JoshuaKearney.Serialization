@@ -1,0 +1,4 @@
+C:\Users\joshw\source\repos\JoshuaKearney.Serialization2\JoshuaKearney.Serialization\obj\Debug\netstandard1.4\JoshuaKearney.Serialization.csprojResolveAssemblyReference.cache
+C:\Users\joshw\source\repos\JoshuaKearney.Serialization2\JoshuaKearney.Serialization\obj\Debug\netstandard1.4\JoshuaKearney.Serialization.csproj.CoreCompileInputs.cache
+C:\Users\joshw\source\repos\JoshuaKearney.Serialization2\JoshuaKearney.Serialization\obj\Debug\netstandard1.4\JoshuaKearney.Serialization.AssemblyInfoInputs.cache
+C:\Users\joshw\source\repos\JoshuaKearney.Serialization2\JoshuaKearney.Serialization\obj\Debug\netstandard1.4\JoshuaKearney.Serialization.AssemblyInfo.cs

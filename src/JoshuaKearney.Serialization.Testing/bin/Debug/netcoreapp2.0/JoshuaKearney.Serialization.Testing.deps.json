@@ -1,0 +1,51 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.0",
+    "signature": "d6d3801f174de928e602bc8fdf3eee02cff16f8e"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.0": {
+      "JoshuaKearney.Serialization.Testing/1.0.0": {
+        "dependencies": {
+          "JoshuaKearney.Serialization": "1.0.0"
+        },
+        "runtime": {
+          "JoshuaKearney.Serialization.Testing.dll": {}
+        }
+      },
+      "JoshuaKearney.Core/2.1.0-alpha": {
+        "runtime": {
+          "lib/netstandard1.0/JoshuaKearney.Core.dll": {}
+        }
+      },
+      "JoshuaKearney.Serialization/1.0.0": {
+        "dependencies": {
+          "JoshuaKearney.Core": "2.1.0-alpha"
+        },
+        "runtime": {
+          "JoshuaKearney.Serialization.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "JoshuaKearney.Serialization.Testing/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "JoshuaKearney.Core/2.1.0-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KaxpMFU5be+Ne1Y5OGakOwcJouUdfv8n7CqMpZgXMCFyOK2oyOl+zXSaJUoWs12jYUsYYa3hclLeOPhDpeQnRA==",
+      "path": "joshuakearney.core/2.1.0-alpha",
+      "hashPath": "joshuakearney.core.2.1.0-alpha.nupkg.sha512"
+    },
+    "JoshuaKearney.Serialization/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
