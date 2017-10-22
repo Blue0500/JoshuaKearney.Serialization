@@ -23,9 +23,46 @@ namespace JoshuaKearney.Serialization {
             return bytes;
         }
 
-        public static IBinaryDeserializer Write(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
+        public static IBinaryDeserializer Read(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
             potential(reader);
             return reader;
+        }
+
+        public static IReadOnlyList<IBinaryDeserializer> ReadSectors(this IBinaryDeserializer reader) {
+            int count = reader.ReadInt32();
+            List<IBinaryDeserializer> deserializers = new List<IBinaryDeserializer>();
+
+            for (int i = 0; i < count; i++) {
+                int length = reader.ReadInt32();
+                var bytes = reader.ReadBytes(length);
+                deserializers.Add(new ArrayDeserializer(bytes));
+            }
+
+            return deserializers;
+        }
+
+        public static bool TryReadSectors(this IBinaryDeserializer reader, out IReadOnlyList<IBinaryDeserializer> result) {
+            if (!reader.TryReadInt32(out int count)) {
+                result = default;
+                return false;
+            }
+
+            List<IBinaryDeserializer> deserializers = new List<IBinaryDeserializer>();
+            result = deserializers;
+
+            for (int i = 0; i < count; i++) {
+                if (!reader.TryReadInt32(out int length)) {
+                    return false;
+                }
+
+                if (!reader.TryReadBytes(length, out var bytes)) {
+                    return false;
+                }
+
+                deserializers.Add(new ArrayDeserializer(bytes));
+            }
+
+            return true;
         }
 
         public static byte ReadByte(this IBinaryDeserializer reader) {

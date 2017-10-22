@@ -22,6 +22,7 @@ namespace JoshuaKearney.Serialization {
             }
             else {
                 buffer = new ArraySegment<byte>(this.array.Array, this.array.Offset + this.pos, count);
+                this.pos += count;
                 return true;
             }
         }

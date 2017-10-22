@@ -9,7 +9,7 @@ namespace JoshuaKearney.Serialization {
     }
 
     public static partial class SerializationExtensions {
-        public static IBinarySerializer WriteBlocks(this IBinarySerializer writer, IEnumerable<IBinarySerializer> writers) {
+        public static IBinarySerializer WriteSectors(this IBinarySerializer writer, IEnumerable<BuilderPotential<IBinarySerializer>> writers) {
             int count;
 
             if (writers is ICollection<IBinarySerializer> collection) {
@@ -24,7 +24,21 @@ namespace JoshuaKearney.Serialization {
 
             writer.Write(count);
 
-            foreach ()
+            foreach (var potential in writers) {
+                ArraySerializer serializer = new ArraySerializer();
+                potential(serializer);
+
+                var final = serializer.Close();
+
+                writer.Write(final.Count);
+                writer.Write(final);
+            }
+
+            return writer;
+        }
+
+        public static IBinarySerializer WriteSectors(this IBinarySerializer writer, params BuilderPotential<IBinarySerializer>[] writers) {
+            return writer.WriteSectors(writers.AsEnumerable());
         }
 
         public static IBinarySerializer Write(this IBinarySerializer writer, IBinarySerializable writable) {

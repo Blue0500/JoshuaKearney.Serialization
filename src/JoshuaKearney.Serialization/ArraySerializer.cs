@@ -16,7 +16,7 @@ namespace JoshuaKearney.Serialization {
             return this;
         }
 
-        public ArraySegment<byte> Finalize() {
+        public ArraySegment<byte> Close() {
             this.finalized = true;
             return this.array.ToArraySegment();
         }

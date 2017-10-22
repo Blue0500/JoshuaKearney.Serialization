@@ -2,46 +2,33 @@
 using System.Text;
 
 namespace JoshuaKearney.Serialization.Testing {
-    class IntAndString : IBinarySerializable {
-        public int Int { get; set; }
-
-        public string Str { get; set; }
-
-        public void WriteTo(IBinarySerializer writer) {
-            writer.Write(this.Int).Write(this.Str);
-        }
-    }
-
     class Program {
         static void Main(string[] args) {
-            var poten = BuilderPotential.Empty<StringBuilder>();
+            var writer = new ArraySerializer();
 
-            poten = poten.Append(sb => sb.Append("something"));
-            poten = poten.Prepend(sb => sb.Append("first "));
+            writer.WriteSectors(
+                wr => {
+                    wr.Write(45);
+                    wr.Write("some");
+                    wr.Write(89);
+                },
+                wr => {
+                    wr.Write("last");
+                    wr.Write(int.MaxValue);
+                }
+            );
 
-            StringBuilder sbb = new StringBuilder();
-            poten.Invoke(sbb);
+            var reader = new ArrayDeserializer(writer.Close());
+            var sectors = reader.ReadSectors();
 
-            Console.WriteLine(sbb.ToString());
+            Console.WriteLine(sectors[0].ReadInt32());
+            Console.WriteLine(sectors[0].ReadString());
+            Console.WriteLine(sectors[0].ReadInt32());
+
+            Console.WriteLine(sectors[1].ReadString());
+            Console.WriteLine(sectors[1].ReadInt32());
+
             Console.Read();
-
-            //var writer = new ArraySerializer();
-            //var some = new IntAndString() {
-            //    Int = 9,
-            //    Str = "other"
-            //};
-
-            //var poten = SerializationPotential.Empty;
-            //poten = poten.Append(wr => wr.Write(some));
-            //poten = poten.Prepend(wr => wr.Write("string"));
-
-            //poten.Serialize(writer);
-
-            //Console.WriteLine("Hello World!");
-        }
-
-        static void Some(IBinarySerializer wr) {
-
         }
     }
 }
