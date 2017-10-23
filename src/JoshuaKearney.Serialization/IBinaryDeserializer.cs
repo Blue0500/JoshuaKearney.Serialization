@@ -11,6 +11,7 @@ namespace JoshuaKearney.Serialization {
 
     public interface IBinaryDeserializer : IDisposable {
         bool TryReadBytes(int count, out ArraySegment<byte> buffer);
+        ArraySegment<byte> ReadToEnd();
         void Reset();
     }
 
@@ -23,9 +24,8 @@ namespace JoshuaKearney.Serialization {
             return bytes;
         }
 
-        public static IBinaryDeserializer Read(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
+        public static void Read(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
             potential(reader);
-            return reader;
         }
 
         public static IReadOnlyList<IBinaryDeserializer> ReadSectors(this IBinaryDeserializer reader) {
@@ -189,13 +189,28 @@ namespace JoshuaKearney.Serialization {
             return BitConverter.ToUInt64(bytes.Array, bytes.Offset);
         }
 
-        public static bool TryReadInt64(this IBinaryDeserializer reader, out ulong result) {
+        public static bool TryReadUInt64(this IBinaryDeserializer reader, out ulong result) {
             if (!reader.TryReadBytes(8, out var bytes)) {
                 result = 0;
                 return false;
             }
 
             result = BitConverter.ToUInt64(bytes.Array, bytes.Offset);
+            return true;
+        }
+
+        public static bool ReadBoolean(this IBinaryDeserializer reader) {
+            var bytes = reader.ReadBytes(1);
+            return BitConverter.ToBoolean(bytes.Array, bytes.Offset);
+        }
+
+        public static bool TryReadBoolean(this IBinaryDeserializer reader, out bool result) {
+            if (!reader.TryReadBytes(1, out var bytes)) {
+                result = default;
+                return false;
+            }
+
+            result = BitConverter.ToBoolean(bytes.Array, bytes.Offset);
             return true;
         }
 

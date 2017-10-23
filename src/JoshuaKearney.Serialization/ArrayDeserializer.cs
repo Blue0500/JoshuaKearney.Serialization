@@ -27,12 +27,12 @@ namespace JoshuaKearney.Serialization {
             }
         }
 
-        public ArraySegment<byte> ReadRemaining() {
-            return new ArraySegment<byte>(this.array.Array, this.array.Offset + this.pos, this.pos);
-        }
-
         public void Reset() {
             this.pos = 0;
+        }
+
+        public ArraySegment<byte> ReadToEnd() {
+            return new ArraySegment<byte>(this.array.Array, this.array.Offset + this.pos, this.pos);
         }
     }
 }

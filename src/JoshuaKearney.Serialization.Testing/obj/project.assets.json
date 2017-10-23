@@ -209,7 +209,7 @@
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
       },
-      "JoshuaKearney.Serialization/1.0.0-alpha": {
+      "JoshuaKearney.Serialization/1.1.2-alpha": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
@@ -694,7 +694,7 @@
         "netstandard.library.nuspec"
       ]
     },
-    "JoshuaKearney.Serialization/1.0.0-alpha": {
+    "JoshuaKearney.Serialization/1.1.2-alpha": {
       "type": "project",
       "path": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj",
       "msbuildProject": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj"
@@ -703,7 +703,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "JoshuaKearney.Core >= 2.1.1-alpha",
-      "JoshuaKearney.Serialization >= 1.0.0-alpha",
+      "JoshuaKearney.Serialization >= 1.1.2-alpha",
       "Microsoft.NETCore.App >= 2.0.0"
     ]
   },

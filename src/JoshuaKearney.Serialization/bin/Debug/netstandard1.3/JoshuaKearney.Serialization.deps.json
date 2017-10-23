@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v1.3": {},
     ".NETStandard,Version=v1.3/": {
-      "JoshuaKearney.Serialization/1.0.0-alpha": {
+      "JoshuaKearney.Serialization/1.1.2-alpha": {
         "dependencies": {
           "JoshuaKearney.Core": "2.1.1-alpha",
           "NETStandard.Library": "1.6.1"
@@ -574,7 +574,7 @@
     }
   },
   "libraries": {
-    "JoshuaKearney.Serialization/1.0.0-alpha": {
+    "JoshuaKearney.Serialization/1.1.2-alpha": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -22,6 +22,18 @@ namespace JoshuaKearney.Serialization {
             this.stream.Dispose();
         }
 
+        public ArraySegment<byte> ReadToEnd() {
+            ResizableArray<byte> array = new ResizableArray<byte>();
+            int read = 0;
+            byte[] buffer = new byte[1024];
+            
+            while ((read = this.stream.Read(buffer, 0, buffer.Length)) > 0) {
+                array.AddRange(buffer);
+            }
+
+            return array.ToArraySegment();
+        }
+
         public void Reset() {
             this.stream.Position = this.initialPosition;
         }

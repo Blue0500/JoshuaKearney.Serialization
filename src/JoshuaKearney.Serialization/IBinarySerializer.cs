@@ -38,7 +38,7 @@ namespace JoshuaKearney.Serialization {
         }
 
         public static IBinarySerializer WriteSectors(this IBinarySerializer writer, params BuilderPotential<IBinarySerializer>[] writers) {
-            return writer.WriteSectors(writers.AsEnumerable());
+            return writer.WriteSectors((IEnumerable<BuilderPotential<IBinarySerializer>>)writers);
         }
 
         public static IBinarySerializer Write(this IBinarySerializer writer, IBinarySerializable writable) {
@@ -91,6 +91,10 @@ namespace JoshuaKearney.Serialization {
             return writer.Write(BitConverter.GetBytes(item));
         }
 
+        public static IBinarySerializer Write(this IBinarySerializer writer, bool item) {
+            return writer.Write(BitConverter.GetBytes(item));
+        }
+
         public static IBinarySerializer WriteSequence(this IBinarySerializer writer, ArraySegment<byte> items) {
             writer.Write(items.Count);
             return writer.Write(items);
@@ -122,7 +126,7 @@ namespace JoshuaKearney.Serialization {
             return writer;
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, IEnumerable<IBinarySerializable> items) {
+        public static IBinarySerializer WriteSequence<T>(this IBinarySerializer writer, IEnumerable<T> items) where T : IBinarySerializable {
             return writer.WriteSequence(items, x => x.WriteTo(writer));
         }
 

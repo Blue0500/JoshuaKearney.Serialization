@@ -9,7 +9,7 @@
       "JoshuaKearney.Serialization.Testing/1.0.0": {
         "dependencies": {
           "JoshuaKearney.Core": "2.1.1-alpha",
-          "JoshuaKearney.Serialization": "1.0.0-alpha"
+          "JoshuaKearney.Serialization": "1.1.2-alpha"
         },
         "runtime": {
           "JoshuaKearney.Serialization.Testing.dll": {}
@@ -20,7 +20,7 @@
           "lib/netstandard1.0/JoshuaKearney.Core.dll": {}
         }
       },
-      "JoshuaKearney.Serialization/1.0.0-alpha": {
+      "JoshuaKearney.Serialization/1.1.2-alpha": {
         "dependencies": {
           "JoshuaKearney.Core": "2.1.1-alpha"
         },
@@ -43,7 +43,7 @@
       "path": "joshuakearney.core/2.1.1-alpha",
       "hashPath": "joshuakearney.core.2.1.1-alpha.nupkg.sha512"
     },
-    "JoshuaKearney.Serialization/1.0.0-alpha": {
+    "JoshuaKearney.Serialization/1.1.2-alpha": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
