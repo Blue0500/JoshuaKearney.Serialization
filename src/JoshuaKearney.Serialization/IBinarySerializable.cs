@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public interface IBinarySerializable {
-        void WriteTo(IBinarySerializer writer);
+        Task WriteToAsync(IBinarySerializer writer);
     }
 
     public static partial class SerializationExtensions {
@@ -19,8 +20,10 @@ namespace JoshuaKearney.Serialization {
                 this.potential = poten;
             }
 
-            public void WriteTo(IBinarySerializer writer) {
+            public Task WriteToAsync(IBinarySerializer writer) {
+                // TODO - Fix this
                 this.potential(writer);
+                return Task.CompletedTask;
             }
         }
     }

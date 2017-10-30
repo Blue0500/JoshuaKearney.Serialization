@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public interface IBinarySerializer : IDisposable {
-        IBinarySerializer Write(ArraySegment<byte> bytes);
+        Task WriteAsync(ArraySegment<byte> bytes);
     }
 
     public static partial class SerializationExtensions {
-        public static IBinarySerializer WriteSectors(this IBinarySerializer writer, IEnumerable<BuilderPotential<IBinarySerializer>> writers) {
+        public static async Task WriteSectorsAsync(this IBinarySerializer writer, IEnumerable<BuilderPotential<IBinarySerializer>> writers) {
             int count;
 
             if (writers is ICollection<IBinarySerializer> collection) {
@@ -22,7 +23,7 @@ namespace JoshuaKearney.Serialization {
                 count = writers.Count();
             }
 
-            writer.Write(count);
+            await writer.WriteAsync(count);
 
             foreach (var potential in writers) {
                 ArraySerializer serializer = new ArraySerializer();
@@ -30,81 +31,79 @@ namespace JoshuaKearney.Serialization {
 
                 var final = serializer.Close();
 
-                writer.Write(final.Count);
-                writer.Write(final);
+                await writer.WriteAsync(final.Count);
+                await writer.WriteAsync(final);
             }
-
-            return writer;
         }
 
-        public static IBinarySerializer WriteSectors(this IBinarySerializer writer, params BuilderPotential<IBinarySerializer>[] writers) {
-            return writer.WriteSectors((IEnumerable<BuilderPotential<IBinarySerializer>>)writers);
+        public static Task WriteSectorsAsync(this IBinarySerializer writer, params BuilderPotential<IBinarySerializer>[] writers) {
+            return writer.WriteSectorsAsync((IEnumerable<BuilderPotential<IBinarySerializer>>)writers);
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, IBinarySerializable writable) {
-            writable.WriteTo(writer);
-            return writer;
+        public static Task WriteAsync(this IBinarySerializer writer, IBinarySerializable writable) {
+            return writable.WriteToAsync(writer);
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, BuilderPotential<IBinarySerializer> potential) {
+        public static Task WriteAsync(this IBinarySerializer writer, BuilderPotential<IBinarySerializer> potential) {
+            // TODO - Fix this
             potential(writer);
-            return writer;
+            return Task.CompletedTask;
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, byte[] bytes) {
-            return writer.Write(new ArraySegment<byte>(bytes));
+        public static Task WriteAsync(this IBinarySerializer writer, byte[] bytes) {
+            return writer.WriteAsync(new ArraySegment<byte>(bytes));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, short item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, short item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, int item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, int item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, long item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, long item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }   
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, float item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, float item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, double item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, double item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, sbyte item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, sbyte item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, ushort item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, ushort item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, uint item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, uint item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, ulong item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, ulong item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, bool item) {
-            return writer.Write(BitConverter.GetBytes(item));
+        public static Task WriteAsync(this IBinarySerializer writer, bool item) {
+            return writer.WriteAsync(BitConverter.GetBytes(item));
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, ArraySegment<byte> items) {
-            writer.Write(items.Count);
-            return writer.Write(items);
+        public static async Task WriteSequenceAsync(this IBinarySerializer writer, ArraySegment<byte> items) {
+            await writer.WriteAsync(items.Count);
+            await writer.WriteAsync(items);
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, byte[] items) {
-            return writer.WriteSequence(new ArraySegment<byte>(items));
+        public static Task WriteSequenceAsync(this IBinarySerializer writer, byte[] items) {
+            return writer.WriteSequenceAsync(new ArraySegment<byte>(items));
         }
 
-        public static IBinarySerializer WriteSequence<T>(this IBinarySerializer writer, IEnumerable<T> items, Action<T> eachFunc) {
+        public static async Task WriteSequenceAsync<T>(this IBinarySerializer writer, IEnumerable<T> items, Func<T, Task> eachFunc) {
             int count;
 
             if (items is ICollection<T> collection) {
@@ -117,41 +116,39 @@ namespace JoshuaKearney.Serialization {
                 count = items.Count();
             }
 
-            writer.Write(count);
+            await writer.WriteAsync(count);
 
             foreach (T item in items) {
-                eachFunc(item);
+                await eachFunc(item);
             }
-
-            return writer;
         }
 
-        public static IBinarySerializer WriteSequence<T>(this IBinarySerializer writer, IEnumerable<T> items) where T : IBinarySerializable {
-            return writer.WriteSequence(items, x => x.WriteTo(writer));
+        public static Task WriteSequenceAsync<T>(this IBinarySerializer writer, IEnumerable<T> items) where T : IBinarySerializable {
+            return writer.WriteSequenceAsync(items, x => x.WriteToAsync(writer));
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, IEnumerable<byte> items) {
-            return writer.WriteSequence(items, x => writer.Write(x));
+        public static Task WriteSequenceAsync(this IBinarySerializer writer, IEnumerable<byte> items) {
+            return writer.WriteSequenceAsync(items, x => writer.WriteAsync(x));
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, IEnumerable<short> items) {
-            return writer.WriteSequence(items, x => writer.Write(x));
+        public static Task WriteSequenceAsync(this IBinarySerializer writer, IEnumerable<short> items) {
+            return writer.WriteSequenceAsync(items, x => writer.WriteAsync(x));
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, IEnumerable<int> items) {
-            return writer.WriteSequence(items, x => writer.Write(x));
+        public static Task WriteSequenceAsync(this IBinarySerializer writer, IEnumerable<int> items) {
+            return writer.WriteSequenceAsync(items, x => writer.WriteAsync(x));
         }
 
-        public static IBinarySerializer WriteSequence(this IBinarySerializer writer, IEnumerable<long> items) {
-            return writer.WriteSequence(items, x => writer.Write(x));
+        public static Task WriteSequenceAsync(this IBinarySerializer writer, IEnumerable<long> items) {
+            return writer.WriteSequenceAsync(items, x => writer.WriteAsync(x));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, string str, Encoding encoding) {
-            return writer.WriteSequence(encoding.GetBytes(str));
+        public static Task WriteAsync(this IBinarySerializer writer, string str, Encoding encoding) {
+            return writer.WriteSequenceAsync(encoding.GetBytes(str));
         }
 
-        public static IBinarySerializer Write(this IBinarySerializer writer, string str) {
-            return writer.WriteSequence(Encoding.ASCII.GetBytes(str));
+        public static Task WriteAsync(this IBinarySerializer writer, string str) {
+            return writer.WriteSequenceAsync(Encoding.ASCII.GetBytes(str));
         }
     }
 }

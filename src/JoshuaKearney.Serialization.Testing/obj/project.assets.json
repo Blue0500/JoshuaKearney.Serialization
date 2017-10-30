@@ -209,12 +209,22 @@
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
       },
-      "JoshuaKearney.Serialization/1.1.2-alpha": {
+      "System.ValueTuple/4.4.0": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/_._": {}
+        }
+      },
+      "JoshuaKearney.Serialization/1.1.3-alpha": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
           "JoshuaKearney.Core": "2.1.1-alpha",
-          "NETStandard.Library": "1.6.1"
+          "NETStandard.Library": "1.6.1",
+          "System.ValueTuple": "4.4.0"
         },
         "compile": {
           "bin/placeholder/JoshuaKearney.Serialization.dll": {}
@@ -694,7 +704,50 @@
         "netstandard.library.nuspec"
       ]
     },
-    "JoshuaKearney.Serialization/1.1.2-alpha": {
+    "System.ValueTuple/4.4.0": {
+      "sha512": "BahUww/+mdP4ARCAh2RQhQTg13wYLVrBb9SYVgW8ZlrwjraGCXHGjo0oIiUfZ34LUZkMMR+RAzR7dEY4S1HeQQ==",
+      "type": "package",
+      "path": "system.valuetuple/4.4.0",
+      "files": [
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net461/System.ValueTuple.dll",
+        "lib/net461/System.ValueTuple.xml",
+        "lib/net47/System.ValueTuple.dll",
+        "lib/net47/System.ValueTuple.xml",
+        "lib/netcoreapp2.0/_._",
+        "lib/netstandard1.0/System.ValueTuple.dll",
+        "lib/netstandard1.0/System.ValueTuple.xml",
+        "lib/netstandard2.0/_._",
+        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
+        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net461/System.ValueTuple.dll",
+        "ref/net461/System.ValueTuple.xml",
+        "ref/net47/System.ValueTuple.dll",
+        "ref/net47/System.ValueTuple.xml",
+        "ref/netcoreapp2.0/_._",
+        "ref/netstandard2.0/_._",
+        "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
+        "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "system.valuetuple.4.4.0.nupkg.sha512",
+        "system.valuetuple.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "JoshuaKearney.Serialization/1.1.3-alpha": {
       "type": "project",
       "path": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj",
       "msbuildProject": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj"
@@ -703,7 +756,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "JoshuaKearney.Core >= 2.1.1-alpha",
-      "JoshuaKearney.Serialization >= 1.1.2-alpha",
+      "JoshuaKearney.Serialization >= 1.1.3-alpha",
       "Microsoft.NETCore.App >= 2.0.0"
     ]
   },
@@ -717,11 +770,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\JoshuaKearney.Serialization.Testing.csproj",
+      "projectUniqueName": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\JoshuaKearney.Serialization.Testing.csproj",
       "projectName": "JoshuaKearney.Serialization.Testing",
-      "projectPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\JoshuaKearney.Serialization.Testing.csproj",
+      "projectPath": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\JoshuaKearney.Serialization.Testing.csproj",
       "packagesPath": "C:\\Users\\joshw\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\obj\\",
+      "outputPath": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization.Testing\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -735,14 +788,13 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\joshw\\.dotnet\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj": {
-              "projectPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj"
+            "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj": {
+              "projectPath": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj"
             }
           }
         }

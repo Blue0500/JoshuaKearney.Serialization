@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public class StreamSerializer : IBinarySerializer, IDisposable {
@@ -18,23 +19,17 @@ namespace JoshuaKearney.Serialization {
 
         public void Dispose() { }
 
-        public Stream Close(bool resetPosition = true) {
+        public Stream Close() {
             this.isClosed = true;
-
-            if (resetPosition) {
-                this.stream.Position = this.startPosition;
-            }
-
             return this.stream;
         }
 
-        public IBinarySerializer Write(ArraySegment<byte> bytes) {
+        public Task WriteAsync(ArraySegment<byte> bytes) {
             if (this.isClosed) {
-                throw new InvalidOperationException("Cannot write to array after finalization");
+                throw new InvalidOperationException("Cannot write to stream after finalization");
             }
 
-            this.stream.Write(bytes.Array, bytes.Offset, bytes.Count);
-            return this;
+            return this.stream.WriteAsync(bytes.Array, bytes.Offset, bytes.Count);
         }
     }
 }

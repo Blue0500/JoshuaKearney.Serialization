@@ -4,7 +4,7 @@ using System.Text;
 namespace JoshuaKearney.Serialization.Testing {
     class Program {
         static void Main(string[] args) {
-            var writer = new ArraySerializer();
+            var writer = new StreamSerializer();
 
             writer.WriteSectors(
                 wr => {
@@ -18,12 +18,11 @@ namespace JoshuaKearney.Serialization.Testing {
                 }
             );
 
-            var reader = new ArrayDeserializer(writer.Close());
+            var reader = new StreamDeserializer(writer.Close());
             var sectors = reader.ReadSectors();
 
             Console.WriteLine(sectors[0].ReadInt32());
-            Console.WriteLine(sectors[0].ReadString());
-            Console.WriteLine(sectors[0].ReadInt32());
+            Console.WriteLine(sectors[0].ReadToEnd().Count);
 
             Console.WriteLine(sectors[1].ReadString());
             Console.WriteLine(sectors[1].ReadInt32());

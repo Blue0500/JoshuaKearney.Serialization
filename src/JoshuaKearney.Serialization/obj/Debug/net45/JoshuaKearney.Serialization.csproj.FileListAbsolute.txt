@@ -6,3 +6,4 @@ C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serial
 C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.AssemblyInfo.cs
 C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.dll
 C:\Users\joshw\Source\Repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.pdb
+C:\Users\joshw\source\repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\obj\Debug\net45\JoshuaKearney.Serialization.csprojResolveAssemblyReference.cache

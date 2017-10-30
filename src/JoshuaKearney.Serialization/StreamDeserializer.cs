@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public class StreamDeserializer : IBinaryDeserializer, IDisposable {
@@ -22,12 +23,12 @@ namespace JoshuaKearney.Serialization {
             this.stream.Dispose();
         }
 
-        public ArraySegment<byte> ReadToEnd() {
+        public async Task<ArraySegment<byte>> ReadToEndAsync() {
             ResizableArray<byte> array = new ResizableArray<byte>();
             int read = 0;
             byte[] buffer = new byte[1024];
             
-            while ((read = this.stream.Read(buffer, 0, buffer.Length)) > 0) {
+            while ((read = await this.stream.ReadAsync(buffer, 0, buffer.Length)) > 0) {
                 array.AddRange(buffer);
             }
 
@@ -39,38 +40,74 @@ namespace JoshuaKearney.Serialization {
         }
 
         public bool TryReadBytes(int count, out ArraySegment<byte> buffer) {
+            var result = new ArraySegment<byte>(new byte[count]);
+            if (!this.TryReadBytes(result)) {
+                buffer = default;
+                return false;
+            }
+
+            buffer = result;
+            return true;
+        }
+
+        public bool TryReadBytes(ArraySegment<byte> buffer) {
             try {
-                byte[] bytes = new byte[count];
                 int pos = 0;
                 int read = 0;
 
-                while ((read = this.stream.Read(bytes, pos, count - pos)) > 0) {
+                while ((read = this.stream.Read(buffer.Array, buffer.Offset + pos, buffer.Count - pos)) > 0) {
                     pos += read;
 
-                    if (pos + 1 >= count) {
+                    if (pos + 1 >= buffer.Count) {
                         break;
                     }
                 }
 
-                if (pos + 1 >= count) {
-                    buffer = new ArraySegment<byte>(bytes);
+                if (pos + 1 >= buffer.Count) {
                     return true;
                 }
                 else {
-                    buffer = default;
                     return false;
                 }
             }
             catch (IOException) {
-                buffer = default;
                 return false;
             }
             catch (NotSupportedException) {
-                buffer = default;
                 return false;
             }
             catch (ObjectDisposedException) {
-                buffer = default;
+                return false;
+            }
+        }
+
+        public async Task<bool> TryReadBytesAsync(ArraySegment<byte> buffer) {
+            try {
+                int pos = 0;
+                int read = 0;
+
+                while ((read = await this.stream.ReadAsync(buffer.Array, buffer.Offset + pos, buffer.Count - pos)) > 0) {
+                    pos += read;
+
+                    if (pos + 1 >= buffer.Count) {
+                        break;
+                    }
+                }
+
+                if (pos + 1 >= buffer.Count) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            catch (IOException) {
+                return false;
+            }
+            catch (NotSupportedException) {
+                return false;
+            }
+            catch (ObjectDisposedException) {
                 return false;
             }
         }

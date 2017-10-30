@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public class ArrayDeserializer : IBinaryDeserializer {
@@ -31,8 +32,27 @@ namespace JoshuaKearney.Serialization {
             this.pos = 0;
         }
 
-        public ArraySegment<byte> ReadToEnd() {
-            return new ArraySegment<byte>(this.array.Array, this.array.Offset + this.pos, this.pos);
+        public Task<ArraySegment<byte>> ReadToEndAsync() {
+            return Task.FromResult(
+                new ArraySegment<byte>(
+                    this.array.Array, 
+                    this.array.Offset + this.pos,
+                    this.array.Count - this.pos
+                )
+            );
+        }
+
+        public bool TryReadBytes(ArraySegment<byte> buffer) {
+            if (!this.TryReadBytes(buffer.Count, out var read)) {
+                return false;
+            }
+
+            Buffer.BlockCopy(read.Array, read.Offset, buffer.Array, buffer.Offset, buffer.Count);
+            return true;
+        }
+
+        public Task<bool> TryReadBytesAsync(ArraySegment<byte> buffer) {
+            return Task.FromResult(this.TryReadBytes(buffer));
         }
     }
 }
