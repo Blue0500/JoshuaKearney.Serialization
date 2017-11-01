@@ -1,31 +1,36 @@
-﻿using System;
+﻿using JoshuaKearney.Serialization.Linq;
+using System;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization.Testing {
     class Program {
         static void Main(string[] args) {
-            var writer = new StreamSerializer();
+            Run().GetAwaiter().GetResult();
+        }
 
-            writer.WriteSectors(
-                wr => {
-                    wr.Write(45);
-                    wr.Write("some");
-                    wr.Write(89);
-                },
-                wr => {
-                    wr.Write("last");
-                    wr.Write(int.MaxValue);
-                }
+        static async Task Run() {
+            var writer = new ArraySerializer();
+
+            await writer.WriteAsync(
+                new BinaryNode(
+                    "some", 
+                    async wr => {
+                        await wr.WriteAsync("thing");
+                        await wr.WriteAsync(45);
+                    },
+                    new BinaryNode("other", wr => wr.WriteAsync(98)),
+                    new BinaryNode("other2", wr => wr.WriteAsync(87))
+                )
             );
 
-            var reader = new StreamDeserializer(writer.Close());
-            var sectors = reader.ReadSectors();
+            var reader = new ArrayDeserializer(writer.Close());
+            var node = await reader.ReadBinaryNodeAsync();
 
-            Console.WriteLine(sectors[0].ReadInt32());
-            Console.WriteLine(sectors[0].ReadToEnd().Count);
-
-            Console.WriteLine(sectors[1].ReadString());
-            Console.WriteLine(sectors[1].ReadInt32());
+            Console.WriteLine(await node.Content.ReadStringAsync());
+            Console.WriteLine(await node.Content.ReadInt32Async());
+            Console.WriteLine(node.Children.First(x => x.Name == "other").NextSibling.Name);
 
             Console.Read();
         }

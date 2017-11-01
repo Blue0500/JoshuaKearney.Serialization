@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.6.2": {
-      "JoshuaKearney.Core/2.1.1-alpha": {
+      "JoshuaKearney.Core/2.2.1-alpha": {
         "type": "package",
         "compile": {
-          "lib/net40/JoshuaKearney.Core.dll": {}
+          "lib/net462/JoshuaKearney.Core.dll": {}
         },
         "runtime": {
-          "lib/net40/JoshuaKearney.Core.dll": {}
+          "lib/net462/JoshuaKearney.Core.dll": {}
         }
       },
       "System.ValueTuple/4.4.0": {
@@ -25,17 +25,17 @@
         }
       }
     },
-    ".NETStandard,Version=v1.3": {
-      "JoshuaKearney.Core/2.1.1-alpha": {
+    ".NETStandard,Version=v1.4": {
+      "JoshuaKearney.Core/2.2.1-alpha": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.1"
         },
         "compile": {
-          "lib/netstandard1.0/JoshuaKearney.Core.dll": {}
+          "lib/netstandard1.4/JoshuaKearney.Core.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.0/JoshuaKearney.Core.dll": {}
+          "lib/netstandard1.4/JoshuaKearney.Core.dll": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {
@@ -730,7 +730,7 @@
           "System.Security.Cryptography.Primitives": "4.3.0"
         },
         "compile": {
-          "ref/netstandard1.3/System.Security.Cryptography.Algorithms.dll": {}
+          "ref/netstandard1.4/System.Security.Cryptography.Algorithms.dll": {}
         }
       },
       "System.Security.Cryptography.Encoding/4.3.0": {
@@ -790,7 +790,7 @@
           "System.Security.Cryptography.Encoding": "4.3.0"
         },
         "compile": {
-          "ref/netstandard1.3/System.Security.Cryptography.X509Certificates.dll": {}
+          "ref/netstandard1.4/System.Security.Cryptography.X509Certificates.dll": {}
         }
       },
       "System.Text.Encoding/4.3.0": {
@@ -938,15 +938,15 @@
     }
   },
   "libraries": {
-    "JoshuaKearney.Core/2.1.1-alpha": {
-      "sha512": "4WlJSpuqc/Sw44HoXNw/NCCoP078gmyWx9s8QqPSoOvg8O1lkSNHfT0u8c3Ko9bujZjELNnjvjgvp8SC1QPPmA==",
+    "JoshuaKearney.Core/2.2.1-alpha": {
+      "sha512": "suJQCTjMMfopnIdNHMxopDgvg2Kg06IyFFRPAI9kqkZI7DkaYP2raHsa2YwcKKkDo7N63iGlHlh9B3VdZhissQ==",
       "type": "package",
-      "path": "joshuakearney.core/2.1.1-alpha",
+      "path": "joshuakearney.core/2.2.1-alpha",
       "files": [
-        "joshuakearney.core.2.1.1-alpha.nupkg.sha512",
+        "joshuakearney.core.2.2.1-alpha.nupkg.sha512",
         "joshuakearney.core.nuspec",
-        "lib/net40/JoshuaKearney.Core.dll",
-        "lib/netstandard1.0/JoshuaKearney.Core.dll"
+        "lib/net462/JoshuaKearney.Core.dll",
+        "lib/netstandard1.4/JoshuaKearney.Core.dll"
       ]
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
@@ -3801,11 +3801,11 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.6.2": [
-      "JoshuaKearney.Core >= 2.1.1-alpha",
+      "JoshuaKearney.Core >= 2.2.1-alpha",
       "System.ValueTuple >= 4.4.0"
     ],
-    ".NETStandard,Version=v1.3": [
-      "JoshuaKearney.Core >= 2.1.1-alpha",
+    ".NETStandard,Version=v1.4": [
+      "JoshuaKearney.Core >= 2.2.1-alpha",
       "NETStandard.Library >= 1.6.1",
       "System.ValueTuple >= 4.4.0"
     ]
@@ -3820,11 +3820,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj",
+      "projectUniqueName": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj",
       "projectName": "JoshuaKearney.Serialization",
-      "projectPath": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj",
+      "projectPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\JoshuaKearney.Serialization.csproj",
       "packagesPath": "C:\\Users\\joshw\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\joshw\\source\\repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\obj\\",
+      "outputPath": "C:\\Users\\joshw\\Source\\Repos\\JoshuaKearney.Serialization\\src\\JoshuaKearney.Serialization\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
@@ -3835,15 +3835,16 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "netstandard1.3",
+        "netstandard1.4",
         "net462"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\joshw\\.dotnet\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "netstandard1.3": {
+        "netstandard1.4": {
           "projectReferences": {}
         },
         "net462": {
@@ -3857,11 +3858,11 @@
       }
     },
     "frameworks": {
-      "netstandard1.3": {
+      "netstandard1.4": {
         "dependencies": {
           "JoshuaKearney.Core": {
             "target": "Package",
-            "version": "2.1.1-alpha"
+            "version": "2.2.1-alpha"
           },
           "System.ValueTuple": {
             "target": "Package",
@@ -3878,7 +3879,7 @@
         "dependencies": {
           "JoshuaKearney.Core": {
             "target": "Package",
-            "version": "2.1.1-alpha"
+            "version": "2.2.1-alpha"
           },
           "System.ValueTuple": {
             "target": "Package",

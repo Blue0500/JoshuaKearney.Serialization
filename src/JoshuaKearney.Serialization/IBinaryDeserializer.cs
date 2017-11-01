@@ -6,16 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization { 
-    public delegate T DeserializeAction<T>();
+    public delegate Task<T> DeserializeAsyncAction<T>();
 
-    public delegate bool DeserializeTryAction<T>(out T result);
+    public delegate Task<(bool success, T result)> DeserializeAsyncTryAction<T>();
 
-    public interface IBinaryDeserializer : IDisposable {
+    public interface IBinaryDeserializer {
         Task<bool> TryReadBytesAsync(ArraySegment<byte> result);
         Task<(bool success, ArraySegment<byte> result)> TryReadBytesAsync(int count);
 
         Task<ArraySegment<byte>> ReadToEndAsync();
-        void Reset();
+        Task ResetAsync();
     }
 
     public static partial class SerializationExtensions {
@@ -30,13 +30,11 @@ namespace JoshuaKearney.Serialization {
         }
 
         public static Task ReadAsync(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
-            // TODO - Fix this
-            potential(reader);
-            return Task.CompletedTask;
+            return potential(reader);
         }
 
         public static async Task<IReadOnlyList<IBinaryDeserializer>> ReadSectorsAsync(this IBinaryDeserializer reader) {
-            int count = reader.ReadInt32();
+            int count = await reader.ReadInt32Async();
             List<IBinaryDeserializer> deserializers = new List<IBinaryDeserializer>();
 
             for (int i = 0; i < count; i++) {
@@ -49,18 +47,20 @@ namespace JoshuaKearney.Serialization {
         }
 
         public static async Task<(bool success, IReadOnlyList<IBinaryDeserializer> sectors)> TryReadSectors(this IBinaryDeserializer reader) {
-            if (!reader.TryReadInt32(out int count)) {
+            var (success, count) = await reader.TryReadInt32Async();
+            if (!success || count < 0) {
                 return (false, default);
             }
 
             List<IBinaryDeserializer> deserializers = new List<IBinaryDeserializer>();
 
             for (int i = 0; i < count; i++) {
-                if (!reader.TryReadInt32(out int length)) {
+                (success, count) = await reader.TryReadInt32Async();
+                if (!success || count < 0) {
                     return (false, default);
                 }
 
-                var maybe = await reader.TryReadBytesAsync(length);
+                var maybe = await reader.TryReadBytesAsync(count);
                 if (!maybe.success) {
                     return (false, default);
                 }
@@ -155,186 +155,188 @@ namespace JoshuaKearney.Serialization {
             });
         }
 
-        public static bool TryReadDouble(this IBinaryDeserializer reader, out double result) {
-            if (!reader.TryReadBytes(8, out var bytes)) {
-                result = 0;
-                return false;
-            }
-
-            result = BitConverter.ToDouble(bytes.Array, bytes.Offset);
-            return true;
+        public static Task<(bool success, double result)> TryReadDoubleAsync(this IBinaryDeserializer reader) {
+            return reader.TryReadBytesAsync(8).ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
+                else {
+                    return (true, BitConverter.ToDouble(task.Result.result.Array, task.Result.result.Offset));
+                }
+            });
         }
 
-        public static ushort ReadUInt16(this IBinaryDeserializer reader) {
-            var bytes = reader.ReadBytes(2);
-            return BitConverter.ToUInt16(bytes.Array, bytes.Offset);
+        public static Task<ushort> ReadUInt16Async(this IBinaryDeserializer reader) {
+            return reader.ReadBytesAsync(2).ContinueWith(task => {
+                return BitConverter.ToUInt16(task.Result.Array, task.Result.Offset);
+            });
         }
 
-        public static bool TryReadUInt16(this IBinaryDeserializer reader, out ushort result) {
-            if (!reader.TryReadBytes(2, out var bytes)) {
-                result = 0;
-                return false;
-            }
-
-            result = BitConverter.ToUInt16(bytes.Array, bytes.Offset);
-            return true;
+        public static Task<(bool success, ushort result)> TryReadUInt16Async(this IBinaryDeserializer reader) {
+            return reader.TryReadBytesAsync(2).ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
+                else {
+                    return (true, BitConverter.ToUInt16(task.Result.result.Array, task.Result.result.Offset));
+                }
+            });
         }
 
-        public static uint ReadUInt32(this IBinaryDeserializer reader) {
-            var bytes = reader.ReadBytes(4);
-            return BitConverter.ToUInt32(bytes.Array, bytes.Offset);
+        public static Task<uint> ReadUInt32Async(this IBinaryDeserializer reader) {
+            return reader.ReadBytesAsync(4).ContinueWith(task => {
+                return BitConverter.ToUInt32(task.Result.Array, task.Result.Offset);
+            });
         }
 
-        public static bool TryReadUInt32(this IBinaryDeserializer reader, out uint result) {
-            if (!reader.TryReadBytes(4, out var bytes)) {
-                result = 0;
-                return false;
-            }
-
-            result = BitConverter.ToUInt32(bytes.Array, bytes.Offset);
-            return true;
+        public static Task<(bool success, uint result)> TryReadUInt32Async(this IBinaryDeserializer reader) {
+            return reader.TryReadBytesAsync(4).ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
+                else {
+                    return (true, BitConverter.ToUInt32(task.Result.result.Array, task.Result.result.Offset));
+                }
+            });
         }
 
-        public static ulong ReadUInt64(this IBinaryDeserializer reader) {
-            var bytes = reader.ReadBytes(8);
-            return BitConverter.ToUInt64(bytes.Array, bytes.Offset);
+        public static Task<ulong> ReadUInt64Async(this IBinaryDeserializer reader) {
+            return reader.ReadBytesAsync(8).ContinueWith(task => {
+                return BitConverter.ToUInt64(task.Result.Array, task.Result.Offset);
+            });
         }
 
-        public static bool TryReadUInt64(this IBinaryDeserializer reader, out ulong result) {
-            if (!reader.TryReadBytes(8, out var bytes)) {
-                result = 0;
-                return false;
-            }
-
-            result = BitConverter.ToUInt64(bytes.Array, bytes.Offset);
-            return true;
+        public static Task<(bool success, ulong result)> TryReadUInt64Async(this IBinaryDeserializer reader) {
+            return reader.TryReadBytesAsync(8).ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
+                else {
+                    return (true, BitConverter.ToUInt64(task.Result.result.Array, task.Result.result.Offset));
+                }
+            });
         }
 
-        public static bool ReadBoolean(this IBinaryDeserializer reader) {
-            var bytes = reader.ReadBytes(1);
-            return BitConverter.ToBoolean(bytes.Array, bytes.Offset);
+        public static Task<bool> ReadBooleanAsync(this IBinaryDeserializer reader) {
+            return reader.ReadBytesAsync(1).ContinueWith(task => {
+                return BitConverter.ToBoolean(task.Result.Array, task.Result.Offset);
+            });
         }
 
-        public static bool TryReadBoolean(this IBinaryDeserializer reader, out bool result) {
-            if (!reader.TryReadBytes(1, out var bytes)) {
-                result = default;
-                return false;
-            }
-
-            result = BitConverter.ToBoolean(bytes.Array, bytes.Offset);
-            return true;
+        public static Task<(bool success, bool result)> TryReadBooleanAsync(this IBinaryDeserializer reader) {
+            return reader.TryReadBytesAsync(1).ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
+                else {
+                    return (true, BitConverter.ToBoolean(task.Result.result.Array, task.Result.result.Offset));
+                }
+            });
         }
 
-        public static ArraySegment<byte> ReadByteSequence(this IBinaryDeserializer reader) {
-            int count = reader.ReadInt32();
+        public static async Task<ArraySegment<byte>> ReadByteSequenceAsync(this IBinaryDeserializer reader) {
+            int count = await reader.ReadInt32Async();
 
             if (count < 0) {
                 throw new InvalidOperationException();
             }
 
-            return reader.ReadBytes(count);
+            return await reader.ReadBytesAsync(count);
         }
 
-        public static bool TryReadByteSequence(this IBinaryDeserializer reader, out ArraySegment<byte> result) {
-            if (!reader.TryReadInt32(out int count)) {
-                result = default;
-                return false;
+        public static async Task<(bool success, ArraySegment<byte> result)> TryReadByteSequenceAsync(this IBinaryDeserializer reader) {
+            var (success, count) = await reader.TryReadInt32Async();
+
+            if (!success || count < 0) {
+                return (false, default);
             }
 
-            if (count < 0) {
-                result = default;
-                return false;
-            }
-
-            return reader.TryReadBytes(count, out result);
+            return await reader.TryReadBytesAsync(count);
         }
 
-        public static IReadOnlyList<T> ReadSequence<T>(this IBinaryDeserializer reader, DeserializeAction<T> itemReader) {
+        public static async Task<IReadOnlyList<T>> ReadSequenceAsync<T>(this IBinaryDeserializer reader, DeserializeAsyncAction<T> itemReader) {
             List<T> list = new List<T>();
-            int count = reader.ReadInt32();
+            int count = await reader.ReadInt32Async();
 
             if (count < 0) {
                 throw new InvalidOperationException("Sequence count cannot be less than 0");
             }
 
             for (int i = 0; i < count; i++) {
-                list.Add(itemReader());
+                list.Add(await itemReader());
             }
 
             return list;
         }
 
-        public static bool TryReadSequence<T>(this IBinaryDeserializer reader, DeserializeTryAction<T> itemReader, out IReadOnlyList<T> result) {
+        public static async Task<(bool success, IReadOnlyList<T> result)> TryReadSequenceAsync<T>(this IBinaryDeserializer reader, DeserializeAsyncTryAction<T> itemReader) {
             List<T> list = new List<T>();
-            
-            if (!reader.TryReadInt32(out int count)) {
-                result = default;
-                return false;
-            }
+            var (success, count) = await reader.TryReadInt32Async();
 
-            if (count < 0) {
-                result = default;
-                return false;
+            if (!success || count < 0) {
+                return (false, default);
             }
 
             for (int i = 0; i < count; i++) {
-                if (!itemReader(out T tResult)) {
-                    result = default;
-                    return false;
+                var (itemSuccess, tResult) = await itemReader();
+
+                if (!itemSuccess) {
+                    return (false, default);
                 }
 
                 list.Add(tResult);
             }
 
-            result = list;
-            return true;
+            return (true, list);
         }
 
-        public static IReadOnlyList<short> ReadInt16Sequence(this IBinaryDeserializer reader) {
-            return reader.ReadSequence(() => reader.ReadInt16());
+        public static Task<IReadOnlyList<short>> ReadInt16SequenceAsync(this IBinaryDeserializer reader) {
+            return reader.ReadSequenceAsync(reader.ReadInt16Async);
         }
 
-        public static bool TryReadInt16Sequence(this IBinaryDeserializer reader, out IReadOnlyList<short> result) {
-            return reader.TryReadSequence(reader.TryReadInt16, out result);
+        public static Task<(bool success, IReadOnlyList<short> result)> TryReadInt16Sequence(this IBinaryDeserializer reader) {
+            return reader.TryReadSequenceAsync(reader.TryReadInt16Async);
         }
 
-        public static IReadOnlyList<int> ReadInt32Sequence(this IBinaryDeserializer reader) {
-            return reader.ReadSequence(() => reader.ReadInt32());
+        public static Task<IReadOnlyList<int>> ReadInt32SequenceAsync(this IBinaryDeserializer reader) {
+            return reader.ReadSequenceAsync(reader.ReadInt32Async);
         }
 
-        public static bool TryReadInt32Sequence(this IBinaryDeserializer reader, out IReadOnlyList<int> result) {
-            return reader.TryReadSequence(reader.TryReadInt32, out result);
+        public static Task<(bool success, IReadOnlyList<int> result)> TryReadInt32SequenceAsync(this IBinaryDeserializer reader) {
+            return reader.TryReadSequenceAsync(reader.TryReadInt32Async);
         }
 
-        public static IReadOnlyList<long> ReadInt64Sequence(this IBinaryDeserializer reader) {
-            return reader.ReadSequence(() => reader.ReadInt64());
+        public static Task<IReadOnlyList<long>> ReadInt64SequenceAsync(this IBinaryDeserializer reader) {
+            return reader.ReadSequenceAsync(reader.ReadInt64Async);
         }
 
-        public static bool TryReadInt64Sequence(this IBinaryDeserializer reader, out IReadOnlyList<long> result) {
-            return reader.TryReadSequence(reader.TryReadInt64, out result);
+        public static Task<(bool success, IReadOnlyList<long> result)> TryReadInt64Sequence(this IBinaryDeserializer reader) {
+            return reader.TryReadSequenceAsync(reader.TryReadInt64Async);
         }
 
-        public static string ReadString(this IBinaryDeserializer reader, Encoding encoding) {
-            var buffer = reader.ReadByteSequence();
-            return encoding.GetString(buffer.Array, buffer.Offset, buffer.Count);
+        public static Task<string> ReadStringAsync(this IBinaryDeserializer reader, Encoding encoding) {
+            return reader.ReadByteSequenceAsync().ContinueWith(task => {
+                return encoding.GetString(task.Result.Array, task.Result.Offset, task.Result.Count);
+            });
         }
 
-        public static string ReadString(this IBinaryDeserializer reader) {
-            return reader.ReadString(Encoding.ASCII);
+        public static Task<string> ReadStringAsync(this IBinaryDeserializer reader) {
+            return reader.ReadStringAsync(Encoding.ASCII);
         }
 
-        public static bool TryReadString(this IBinaryDeserializer reader, Encoding encoding, out string result) {
-            if (!reader.TryReadByteSequence(out var bytes)) {
-                result = default;
-                return false;
-            }
+        public static Task<(bool success, string result)> TryReadStringAsync(this IBinaryDeserializer reader, Encoding encoding) {
+            return reader.TryReadByteSequenceAsync().ContinueWith(task => {
+                if (!task.Result.success) {
+                    return (false, default);
+                }
 
-            result = encoding.GetString(bytes.Array, bytes.Offset, bytes.Count);
-            return true;
+                var bytes = task.Result.result;
+                return (true, encoding.GetString(bytes.Array, bytes.Offset, bytes.Count));
+            });
         }
 
-        public static bool TryReadString(this IBinaryDeserializer reader, out string result) {
-            return reader.TryReadString(Encoding.ASCII, out result);
+        public static Task<(bool success, string result)> TryReadString(this IBinaryDeserializer reader) {
+            return reader.TryReadStringAsync(Encoding.ASCII);
         }
     }
 }

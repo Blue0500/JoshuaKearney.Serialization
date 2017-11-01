@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public interface IBinarySerializer : IDisposable {
+    public interface IBinarySerializer {
         Task WriteAsync(ArraySegment<byte> bytes);
     }
 
@@ -27,7 +27,7 @@ namespace JoshuaKearney.Serialization {
 
             foreach (var potential in writers) {
                 ArraySerializer serializer = new ArraySerializer();
-                potential(serializer);
+                await potential(serializer);
 
                 var final = serializer.Close();
 
@@ -46,8 +46,7 @@ namespace JoshuaKearney.Serialization {
 
         public static Task WriteAsync(this IBinarySerializer writer, BuilderPotential<IBinarySerializer> potential) {
             // TODO - Fix this
-            potential(writer);
-            return Task.CompletedTask;
+            return potential(writer);
         }
 
         public static Task WriteAsync(this IBinarySerializer writer, byte[] bytes) {

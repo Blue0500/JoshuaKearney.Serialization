@@ -21,9 +21,7 @@ namespace JoshuaKearney.Serialization {
             }
 
             public Task WriteToAsync(IBinarySerializer writer) {
-                // TODO - Fix this
-                this.potential(writer);
-                return Task.CompletedTask;
+                return this.potential(writer);
             }
         }
     }

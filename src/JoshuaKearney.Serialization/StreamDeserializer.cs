@@ -5,22 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public class StreamDeserializer : IBinaryDeserializer, IDisposable {
+    public class StreamDeserializer : IBinaryDeserializer, IBinarySerializable {
         private Stream stream;
         private long initialPosition;
 
         public StreamDeserializer(Stream stream) {
             this.stream = stream;
             this.initialPosition = stream.Position;
-        }
-
-        ~StreamDeserializer() {
-            GC.SuppressFinalize(this);
-            this.Dispose();
-        }
-
-        public void Dispose() {
-            this.stream.Dispose();
         }
 
         public async Task<ArraySegment<byte>> ReadToEndAsync() {
@@ -35,54 +26,13 @@ namespace JoshuaKearney.Serialization {
             return array.ToArraySegment();
         }
 
-        public void Reset() {
+        public Task ResetAsync() {
             this.stream.Position = this.initialPosition;
-        }
-
-        public bool TryReadBytes(int count, out ArraySegment<byte> buffer) {
-            var result = new ArraySegment<byte>(new byte[count]);
-            if (!this.TryReadBytes(result)) {
-                buffer = default;
-                return false;
-            }
-
-            buffer = result;
-            return true;
-        }
-
-        public bool TryReadBytes(ArraySegment<byte> buffer) {
-            try {
-                int pos = 0;
-                int read = 0;
-
-                while ((read = this.stream.Read(buffer.Array, buffer.Offset + pos, buffer.Count - pos)) > 0) {
-                    pos += read;
-
-                    if (pos + 1 >= buffer.Count) {
-                        break;
-                    }
-                }
-
-                if (pos + 1 >= buffer.Count) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            catch (IOException) {
-                return false;
-            }
-            catch (NotSupportedException) {
-                return false;
-            }
-            catch (ObjectDisposedException) {
-                return false;
-            }
+            return Task.CompletedTask;
         }
 
         public async Task<bool> TryReadBytesAsync(ArraySegment<byte> buffer) {
-            try {
+           try {
                 int pos = 0;
                 int read = 0;
 
@@ -110,6 +60,18 @@ namespace JoshuaKearney.Serialization {
             catch (ObjectDisposedException) {
                 return false;
             }
+        }
+
+        public Task<(bool success, ArraySegment<byte> result)> TryReadBytesAsync(int count) {
+            ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[count]);
+
+            return this.TryReadBytesAsync(buffer).ContinueWith(task => {
+                return (task.Result, buffer);
+            });
+        }
+
+        public async Task WriteToAsync(IBinarySerializer writer) {
+            await writer.WriteAsync(await this.ReadToEndAsync());
         }
     }
 }

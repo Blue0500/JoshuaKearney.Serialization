@@ -1,29 +1,29 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "553fb01e29f60a6e5ce46eac716be8c058a38e40"
+    "signature": "35fe4b221e5cbfe7c2ad0b321ac5055fcc22d315"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.0": {
       "JoshuaKearney.Serialization.Testing/1.0.0": {
         "dependencies": {
-          "JoshuaKearney.Core": "2.1.1-alpha",
+          "JoshuaKearney.Core": "2.2.1-alpha",
           "JoshuaKearney.Serialization": "1.1.3-alpha"
         },
         "runtime": {
           "JoshuaKearney.Serialization.Testing.dll": {}
         }
       },
-      "JoshuaKearney.Core/2.1.1-alpha": {
+      "JoshuaKearney.Core/2.2.1-alpha": {
         "runtime": {
-          "lib/netstandard1.0/JoshuaKearney.Core.dll": {}
+          "lib/netstandard1.4/JoshuaKearney.Core.dll": {}
         }
       },
       "System.ValueTuple/4.4.0": {},
       "JoshuaKearney.Serialization/1.1.3-alpha": {
         "dependencies": {
-          "JoshuaKearney.Core": "2.1.1-alpha",
+          "JoshuaKearney.Core": "2.2.1-alpha",
           "System.ValueTuple": "4.4.0"
         },
         "runtime": {
@@ -38,12 +38,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "JoshuaKearney.Core/2.1.1-alpha": {
+    "JoshuaKearney.Core/2.2.1-alpha": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4WlJSpuqc/Sw44HoXNw/NCCoP078gmyWx9s8QqPSoOvg8O1lkSNHfT0u8c3Ko9bujZjELNnjvjgvp8SC1QPPmA==",
-      "path": "joshuakearney.core/2.1.1-alpha",
-      "hashPath": "joshuakearney.core.2.1.1-alpha.nupkg.sha512"
+      "sha512": "sha512-suJQCTjMMfopnIdNHMxopDgvg2Kg06IyFFRPAI9kqkZI7DkaYP2raHsa2YwcKKkDo7N63iGlHlh9B3VdZhissQ==",
+      "path": "joshuakearney.core/2.2.1-alpha",
+      "hashPath": "joshuakearney.core.2.2.1-alpha.nupkg.sha512"
     },
     "System.ValueTuple/4.4.0": {
       "type": "package",
