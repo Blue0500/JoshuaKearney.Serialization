@@ -46,7 +46,7 @@ namespace JoshuaKearney.Serialization {
             return deserializers;
         }
 
-        public static async Task<(bool success, IReadOnlyList<IBinaryDeserializer> sectors)> TryReadSectors(this IBinaryDeserializer reader) {
+        public static async Task<(bool success, IReadOnlyList<IBinaryDeserializer> sectors)> TryReadSectorsAsync(this IBinaryDeserializer reader) {
             var (success, count) = await reader.TryReadInt32Async();
             if (!success || count < 0) {
                 return (false, default);
@@ -294,7 +294,7 @@ namespace JoshuaKearney.Serialization {
             return reader.ReadSequenceAsync(reader.ReadInt16Async);
         }
 
-        public static Task<(bool success, IReadOnlyList<short> result)> TryReadInt16Sequence(this IBinaryDeserializer reader) {
+        public static Task<(bool success, IReadOnlyList<short> result)> TryReadInt16SequenceAsync(this IBinaryDeserializer reader) {
             return reader.TryReadSequenceAsync(reader.TryReadInt16Async);
         }
 
@@ -335,7 +335,7 @@ namespace JoshuaKearney.Serialization {
             });
         }
 
-        public static Task<(bool success, string result)> TryReadString(this IBinaryDeserializer reader) {
+        public static Task<(bool success, string result)> TryReadStringAsync(this IBinaryDeserializer reader) {
             return reader.TryReadStringAsync(Encoding.ASCII);
         }
     }
