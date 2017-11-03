@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public class StreamSerializer : IBinarySerializer, IDisposable {
+    public class StreamSerializer : BinarySerializer, IDisposable {
         private readonly Stream stream;
-        private readonly long startPosition;
         private bool isClosed = false;
 
         public StreamSerializer(Stream stream) {
             this.stream = stream;
-            this.startPosition = stream.Position;
         }
 
         public StreamSerializer() : this(new MemoryStream()) { }
@@ -24,12 +22,24 @@ namespace JoshuaKearney.Serialization {
             return this.stream;
         }
 
-        public Task WriteAsync(ArraySegment<byte> bytes) {
+        public override Task WriteAsync(ArraySegment<byte> bytes) {
             if (this.isClosed) {
-                throw new InvalidOperationException("Cannot write to stream after finalization");
+                throw new InvalidOperationException("Cannot write to stream after closing");
             }
 
             return this.stream.WriteAsync(bytes.Array, bytes.Offset, bytes.Count);
+        }
+
+        public override Task WriteAsync(Stream stream) {
+            if (this.isClosed) {
+                throw new InvalidOperationException("Cannot write to stream after closing");
+            }
+
+            return stream.CopyToAsync(this.stream);
+        }
+
+        public override Task<Stream> GetStreamAsync() {
+            return Task.FromResult(this.stream);
         }
     }
 }

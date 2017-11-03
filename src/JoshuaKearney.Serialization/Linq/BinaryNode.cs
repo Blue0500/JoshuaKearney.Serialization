@@ -13,7 +13,7 @@ namespace JoshuaKearney.Serialization.Linq {
 
         public IReadOnlyCollection<BinaryNode> Children => this.children;
 
-        public IBinaryDeserializer Content { get; }
+        public BinaryDeserializer Content { get; }
 
         public BinaryNode Parent {
             get {
@@ -49,15 +49,15 @@ namespace JoshuaKearney.Serialization.Linq {
             }
         }
 
-        public BinaryNode(string name, IBinaryDeserializer content, params BinaryNode[] children) : this(name, children) {
+        public BinaryNode(string name, BinaryDeserializer content, params BinaryNode[] children) : this(name, children) {
             this.Content = content;
         }
 
-        public BinaryNode(string name, BuilderPotential<IBinarySerializer> content, params BinaryNode[] children) : this(name, children) {
+        public BinaryNode(string name, BuilderPotential<BinarySerializer> content, params BinaryNode[] children) : this(name, children) {
             this.Content = new LazyDeserializer(content.AsSerializable());
         }
 
-        public async Task WriteToAsync(IBinarySerializer writer) {
+        public async Task WriteToAsync(BinarySerializer writer) {
             await writer.WriteAsync(this.Name);
             await writer.WriteSequenceAsync(await this.Content.ReadToEndAsync());
             await writer.WriteSequenceAsync(this.Children, item => item.WriteToAsync(writer));
@@ -116,7 +116,7 @@ namespace JoshuaKearney.Serialization.Linq {
     }
 
     public static partial class SerializationExtensions {
-        public static async Task<BinaryNode> ReadBinaryNodeAsync(this IBinaryDeserializer reader) {
+        public static async Task<BinaryNode> ReadBinaryNodeAsync(this BinaryDeserializer reader) {
             string name = await reader.ReadStringAsync();
             var content = new ArrayDeserializer(await reader.ReadByteSequenceAsync());
             var children = await reader.ReadSequenceAsync(reader.ReadBinaryNodeAsync);

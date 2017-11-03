@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization.Linq {
-    internal class LazyDeserializer : IBinaryDeserializer, IBinarySerializable {
+    internal class LazyDeserializer : BinaryDeserializer, IBinarySerializable {
         private IBinarySerializable content;
         private ArrayDeserializer deserializer;
 
@@ -12,7 +13,7 @@ namespace JoshuaKearney.Serialization.Linq {
             this.content = content;
         }
 
-        public async Task<ArraySegment<byte>> ReadToEndAsync() {
+        public override async Task<ArraySegment<byte>> ReadToEndAsync() {
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -20,7 +21,15 @@ namespace JoshuaKearney.Serialization.Linq {
             return await this.deserializer.ReadToEndAsync();
         }
 
-        public async Task ResetAsync() {
+        public override async Task<Stream> GetStreamAsync() {
+            if (this.deserializer == null) {
+                await this.InitializeDeserializer();
+            }
+
+            return await this.deserializer.GetStreamAsync();
+        }
+
+        public override async Task ResetAsync() {
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -28,7 +37,7 @@ namespace JoshuaKearney.Serialization.Linq {
             await this.deserializer.ResetAsync();
         }
 
-        public async Task<bool> TryReadBytesAsync(ArraySegment<byte> result) {
+        public override async Task<int> TryReadBytesAsync(ArraySegment<byte> result) {
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -36,7 +45,7 @@ namespace JoshuaKearney.Serialization.Linq {
             return await this.deserializer.TryReadBytesAsync(result);
         }
 
-        public async Task<(bool success, ArraySegment<byte> result)> TryReadBytesAsync(int count) {
+        public override async Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -44,7 +53,7 @@ namespace JoshuaKearney.Serialization.Linq {
             return await this.deserializer.TryReadBytesAsync(count);
         }
 
-        public async Task WriteToAsync(IBinarySerializer writer) {
+        public async Task WriteToAsync(BinarySerializer writer) {
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }

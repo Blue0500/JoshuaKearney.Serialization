@@ -4,28 +4,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public class ArraySerializer : IBinarySerializer, IBinarySerializable {
+    public class ArraySerializer : BinarySerializer, IBinarySerializable {
+        private bool isClosed = false;
         private ResizableArray<byte> array = new ResizableArray<byte>();
-        private bool finalized = false;
 
-        public Task WriteAsync(ArraySegment<byte> bytes) {
-            if (this.finalized) {
-                throw new InvalidOperationException("Cannot write to array after finalization");
+        public override Task WriteAsync(ArraySegment<byte> bytes) {
+            if (this.isClosed) {
+                throw new InvalidOperationException("Cannot write to stream after closing");
             }
 
             this.array.AddRange(bytes);
             return Task.CompletedTask;
         }
 
-        public ArraySegment<byte> Close() {
-            this.finalized = true;
-            return this.array.ToArraySegment();
+        public Task WriteToAsync(BinarySerializer writer) {
+            return writer.WriteAsync(this.array.ToArraySegment());
         }
 
-        public void Dispose() { }
-
-        public Task WriteToAsync(IBinarySerializer writer) {
-            return writer.WriteAsync(this.array.ToArraySegment());
+        public ArraySegment<byte> Close() {
+            this.isClosed = true;
+            return this.array.ToArraySegment();
         }
     }
 }

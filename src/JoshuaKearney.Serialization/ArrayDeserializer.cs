@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public class ArrayDeserializer : IBinaryDeserializer, IBinarySerializable {
+    public class ArrayDeserializer : BinaryDeserializer, IBinarySerializable {
         private ArraySegment<byte> array;
         private int pos;
 
@@ -28,49 +28,41 @@ namespace JoshuaKearney.Serialization {
             }
         }
 
-        public Task ResetAsync() {
+        public override Task ResetAsync() {
             this.pos = 0;
             return Task.CompletedTask;
         }
 
-        public Task<ArraySegment<byte>> ReadToEndAsync() {
-            return Task.FromResult(
-                new ArraySegment<byte>(
-                    this.array.Array, 
-                    this.array.Offset + this.pos,
-                    this.array.Count - this.pos
-                )
-            );
+        public override Task<ArraySegment<byte>> ReadToEndAsync() {
+            if (this.pos >= this.array.Count) {
+                return Task.FromResult(new ArraySegment<byte>(new byte[0]));
+            }
+            else {
+                var result = Task.FromResult(
+                    new ArraySegment<byte>(
+                        this.array.Array,
+                        this.array.Offset + this.pos,
+                        this.array.Count - this.pos
+                    )
+                );
+
+                this.pos = this.array.Offset + this.array.Count;
+                return result;
+            }
         }
 
-        public Task<bool> TryReadBytesAsync(ArraySegment<byte> result) {
-            return this.TryReadBytesAsync(result.Count).ContinueWith(task => {
-                if (task.Result.success) {
-                    Buffer.BlockCopy(
-                        task.Result.result.Array, 
-                        task.Result.result.Offset, 
-                        result.Array, 
-                        result.Offset, 
-                        result.Count
-                    );
-                }
-
-                return task.Result.success;
-            });
-        }
-
-        public Task<(bool success, ArraySegment<byte> result)> TryReadBytesAsync(int count) {
+        public override Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
             if (this.pos + count > this.array.Count) {
-                return Task.FromResult((false, default(ArraySegment<byte>)));
+                return this.ReadToEndAsync();
             }
             else {
                 var buffer = new ArraySegment<byte>(this.array.Array, this.array.Offset + this.pos, count);
                 this.pos += count;
-                return Task.FromResult((true, buffer));
+                return Task.FromResult(buffer);
             }
         }
 
-        public async Task WriteToAsync(IBinarySerializer writer) {
+        public async Task WriteToAsync(BinarySerializer writer) {
             await writer.WriteAsync(await this.ReadToEndAsync());
         }
     }
