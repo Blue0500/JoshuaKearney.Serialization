@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public class StreamDeserializer : BinaryDeserializer, IBinarySerializable {
+        private bool isDisposed = false;
         private Stream stream;
 
         public StreamDeserializer(Stream stream) {
@@ -13,6 +14,10 @@ namespace JoshuaKearney.Serialization {
         }
 
         public override async Task<ArraySegment<byte>> ReadToEndAsync() {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
             ResizableArray<byte> data = new ResizableArray<byte>();
             byte[] buffer = new byte[1024];
             int read = 0;
@@ -25,15 +30,27 @@ namespace JoshuaKearney.Serialization {
         }
 
         public override Task<Stream> GetStreamAsync() {
-            return Task.FromResult(this.stream);
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
+            return Task.FromResult<Stream>(new IndisposableStream(this.stream));
         }
 
         public override Task ResetAsync() {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
             this.stream.Position = 0;
             return Task.CompletedTask;
         }
 
         public override async Task<int> TryReadBytesAsync(ArraySegment<byte> buffer) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
             int pos = 0;
 
             try {
@@ -61,6 +78,10 @@ namespace JoshuaKearney.Serialization {
         }
 
         public override Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
             ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[count]);
 
             return this.TryReadBytesAsync(buffer).ContinueWith(task => {
@@ -69,7 +90,22 @@ namespace JoshuaKearney.Serialization {
         }
 
         public async Task WriteToAsync(BinarySerializer writer) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            }
+
             await writer.WriteAsync(this.stream);
+        }
+
+        public override void Dispose() {
+            if (this.isDisposed) {
+                return;
+            }
+
+            this.isDisposed = true;
+            this.stream.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

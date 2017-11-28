@@ -9,7 +9,7 @@
       "JoshuaKearney.Serialization.Testing/1.0.0": {
         "dependencies": {
           "JoshuaKearney.Core": "2.2.1-alpha",
-          "JoshuaKearney.Serialization": "1.3.1-alpha"
+          "JoshuaKearney.Serialization": "1.3.4-alpha"
         },
         "runtime": {
           "JoshuaKearney.Serialization.Testing.dll": {}
@@ -21,7 +21,7 @@
         }
       },
       "System.ValueTuple/4.4.0": {},
-      "JoshuaKearney.Serialization/1.3.1-alpha": {
+      "JoshuaKearney.Serialization/1.3.4-alpha": {
         "dependencies": {
           "JoshuaKearney.Core": "2.2.1-alpha",
           "System.ValueTuple": "4.4.0"
@@ -52,7 +52,7 @@
       "path": "system.valuetuple/4.4.0",
       "hashPath": "system.valuetuple.4.4.0.nupkg.sha512"
     },
-    "JoshuaKearney.Serialization/1.3.1-alpha": {
+    "JoshuaKearney.Serialization/1.3.4-alpha": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

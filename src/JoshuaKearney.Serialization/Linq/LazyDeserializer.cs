@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization.Linq {
     internal class LazyDeserializer : BinaryDeserializer, IBinarySerializable {
+        private bool isDisposed = false;
         private IBinarySerializable content;
         private ArrayDeserializer deserializer;
 
@@ -14,6 +15,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public override async Task<ArraySegment<byte>> ReadToEndAsync() {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -22,6 +27,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public override async Task<Stream> GetStreamAsync() {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -30,6 +39,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public override async Task ResetAsync() {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -38,6 +51,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public override async Task<int> TryReadBytesAsync(ArraySegment<byte> result) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -46,6 +63,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public override async Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -54,6 +75,10 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         public async Task WriteToAsync(BinarySerializer writer) {
+            if (this.isDisposed) {
+                throw new ObjectDisposedException(nameof(LazyDeserializer));
+            }
+
             if (this.deserializer == null) {
                 await this.InitializeDeserializer();
             }
@@ -62,10 +87,23 @@ namespace JoshuaKearney.Serialization.Linq {
         }
 
         private async Task InitializeDeserializer() {
-            ArraySerializer serial = new ArraySerializer();
-            await serial.WriteAsync(this.content);
-            this.deserializer = new ArrayDeserializer(serial.Close());
+            using (ArraySerializer serial = new ArraySerializer()) {
+                await serial.WriteAsync(this.content);
+                this.deserializer = new ArrayDeserializer(serial.Array);
+                this.content = null;
+            }
+        }
+
+        public override void Dispose() {
+            if (this.isDisposed) {
+                return;
+            }
+
+            this.isDisposed = true;
+            this.deserializer.Dispose();
             this.content = null;
+
+            GC.SuppressFinalize(this);
         }
     }
 }

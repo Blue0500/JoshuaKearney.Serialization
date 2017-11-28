@@ -59,7 +59,8 @@ namespace JoshuaKearney.Serialization {
                 throw new InvalidOperationException();
             }
 
-            this.WriteAsync(buffer, offset, count).GetAwaiter().GetResult();
+            var segment = new ArraySegment<byte>(buffer, offset, count);
+            this.serializer.WriteAsync(segment).GetAwaiter().GetResult();
         }
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) {
@@ -67,7 +68,17 @@ namespace JoshuaKearney.Serialization {
                 throw new InvalidOperationException();
             }
 
-            return this.serializer.WriteAsync(new ArraySegment<byte>(buffer, offset, count));
+            var segment = new ArraySegment<byte>(buffer, offset, count);
+            return this.serializer.WriteAsync(segment);
+        }
+
+        protected override void Dispose(bool disposing) {
+            base.Dispose(disposing);
+
+            if (disposing) {
+                this.serializer?.Dispose();
+                this.deserializer?.Dispose();
+            }
         }
     }
 }

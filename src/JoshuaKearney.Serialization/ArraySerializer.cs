@@ -5,15 +5,13 @@ using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     public class ArraySerializer : BinarySerializer, IBinarySerializable {
-        private bool isClosed = false;
         private ResizableArray<byte> array = new ResizableArray<byte>();
 
-        public override Task WriteAsync(ArraySegment<byte> bytes) {
-            if (this.isClosed) {
-                throw new InvalidOperationException("Cannot write to stream after closing");
-            }
+        public ArraySegment<byte> Array => this.array.ToArraySegment();
 
+        public override Task WriteAsync(ArraySegment<byte> bytes) {
             this.array.AddRange(bytes);
+
             return Task.CompletedTask;
         }
 
@@ -21,9 +19,6 @@ namespace JoshuaKearney.Serialization {
             return writer.WriteAsync(this.array.ToArraySegment());
         }
 
-        public ArraySegment<byte> Close() {
-            this.isClosed = true;
-            return this.array.ToArraySegment();
-        }
+        public override void Dispose() { }
     }
 }

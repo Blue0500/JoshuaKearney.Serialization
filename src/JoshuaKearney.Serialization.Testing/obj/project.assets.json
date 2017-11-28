@@ -218,7 +218,7 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "JoshuaKearney.Serialization/1.3.1-alpha": {
+      "JoshuaKearney.Serialization/1.3.4-alpha": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
@@ -747,7 +747,7 @@
         "version.txt"
       ]
     },
-    "JoshuaKearney.Serialization/1.3.1-alpha": {
+    "JoshuaKearney.Serialization/1.3.4-alpha": {
       "type": "project",
       "path": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj",
       "msbuildProject": "../JoshuaKearney.Serialization/JoshuaKearney.Serialization.csproj"
@@ -756,7 +756,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "JoshuaKearney.Core >= 2.2.1-alpha",
-      "JoshuaKearney.Serialization >= 1.3.1-alpha",
+      "JoshuaKearney.Serialization >= 1.3.4-alpha",
       "Microsoft.NETCore.App >= 2.0.0"
     ]
   },
@@ -815,7 +815,7 @@
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0.0",
+            "version": "2.0",
             "autoReferenced": true
           }
         },

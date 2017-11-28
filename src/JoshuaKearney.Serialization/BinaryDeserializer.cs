@@ -10,7 +10,7 @@ namespace JoshuaKearney.Serialization {
 
     public delegate Task<(bool success, T result)> DeserializeAsyncTryAction<T>();
 
-    public abstract class BinaryDeserializer {
+    public abstract class BinaryDeserializer : IDisposable {
         public abstract Task<ArraySegment<byte>> TryReadBytesAsync(int count);
         public virtual async Task<int> TryReadBytesAsync(ArraySegment<byte> result) {
             var bytes = await this.TryReadBytesAsync(result.Count);
@@ -26,7 +26,7 @@ namespace JoshuaKearney.Serialization {
 
         public abstract Task<ArraySegment<byte>> ReadToEndAsync();
         public virtual Task<Stream> GetStreamAsync() {
-            return Task.FromResult<Stream>(new SerializationStream(this));
+            return Task.FromResult<Stream>(new IndisposableStream(new SerializationStream(this)));
         }
 
         public abstract Task ResetAsync();
@@ -38,6 +38,8 @@ namespace JoshuaKearney.Serialization {
         public static implicit operator BinaryDeserializer(StreamReader writer) {
             return new StreamDeserializer(writer.BaseStream);
         }
+
+        public abstract void Dispose();
     }
 
     public static partial class SerializationExtensions {

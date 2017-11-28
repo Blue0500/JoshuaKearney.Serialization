@@ -2,59 +2,62 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization.Testing {
     class Program {
-        static void Main(string[] args) {           
+        static Aes aes = Aes.Create();
 
-            Run().GetAwaiter().GetResult();
+        static void Main(string[] args) {
+            var node = new BinaryNode("s")
+
+            //aes.KeySize = 256;
+            //aes.GenerateKey();
+            //aes.GenerateIV();
+            //aes.Padding = PaddingMode.PKCS7;
+
+            //Run().GetAwaiter().GetResult();
+
+            Console.Read();
+        }
+
+        static async Task Run2() {               
+            ArraySegment<byte> encrypted;
+            using (var ms = new MemoryStream()) {
+                using (var crypto = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write)) {
+                    using (StreamWriter writer = new StreamWriter(crypto)) {
+                        await writer.WriteLineAsync("Hello, World!");
+                    }
+                }
+
+                encrypted = ms.ToArray();
+            }
+
+            using (var ms = new MemoryStream(encrypted.Array, encrypted.Offset, encrypted.Count)) {
+                using (var crypto = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read)) {
+                    using (StreamReader reader = new StreamReader(crypto)) {
+                        Console.WriteLine(await reader.ReadLineAsync());
+                    }
+                }
+            }
         }
 
         static async Task Run() {
-            
+            var serial = new ArraySerializer();
 
-            Console.WriteLine(await deserial.ReadInt32Async());
-            Console.Read();
+            using (var crypto = serial.Encrypt(aes.CreateEncryptor()))
+            using (var comp = crypto.CompressDeflate()) {  
+                await comp.WriteAsync("Hello, World!");
+                await comp.WriteAsync(0);
+            }
 
-            //BuilderPotential<BinarySerializer> data = wr => {
-            //    return wr.WriteAsync("This is some sentense whereupon I am testing the length issues");
-            //};
-
-            //ArraySerializer serial = new ArraySerializer();
-            //StreamSerializer serial2 = new StreamSerializer();
-
-            //await serial.WriteAsync(data);
-            //await serial2.WriteAsync(data);
-
-            //BinaryDeserializer deserial = new ArrayDeserializer(serial.Close());
-
-            //Stream s = serial2.Close();
-            //s.Position = 0;
-
-            //BinaryDeserializer deserial2 = new StreamDeserializer(s);
-
-            //deserial = new StreamDeserializer(await deserial.GetStreamAsync());
-            //deserial2 = new StreamDeserializer(await deserial2.GetStreamAsync());
-
-            //Console.WriteLine(string.Join(" ", await deserial.ReadBytesAsync(25)));
-            //Console.WriteLine(string.Join(" ", await deserial2.ReadBytesAsync(25)));
-            //Console.WriteLine();
-
-            //Console.WriteLine(string.Join(" ", await deserial.ReadBytesAsync(25)));
-            //Console.WriteLine(string.Join(" ", await deserial2.ReadBytesAsync(25)));
-            //Console.WriteLine();
-
-            //Console.WriteLine(string.Join(" ", await deserial.ReadBytesAsync(25)));
-            //Console.WriteLine(string.Join(" ", await deserial2.ReadBytesAsync(25)));
-            //Console.WriteLine();
-
-            //Console.WriteLine(string.Join(" ", await deserial.ReadBytesAsync(25)));
-            //Console.WriteLine(string.Join(" ", await deserial2.ReadBytesAsync(25)));
-            //Console.WriteLine();
-
-            //Console.Read();
+            using (var decomp = new ArrayDeserializer(serial.Array).Decrypt(aes.CreateDecryptor()))
+            using (var crypto = decomp.DecompressDeflate()) { 
+                Console.WriteLine(await crypto.ReadStringAsync());
+                Console.WriteLine(await crypto.ReadBooleanAsync());
+            }
         }
     }
 }

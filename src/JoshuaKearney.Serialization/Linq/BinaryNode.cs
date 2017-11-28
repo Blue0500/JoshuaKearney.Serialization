@@ -123,5 +123,24 @@ namespace JoshuaKearney.Serialization.Linq {
 
             return new BinaryNode(name, content, children.ToArray());
         }
+
+        public static async Task<(bool success, BinaryNode node)> TryReadBinaryNodeAsync(this BinaryDeserializer reader) {
+            var (hasName, name) = await reader.TryReadStringAsync();
+            if (!hasName) {
+                return (false, default);
+            }
+
+            var (hasContent, content) = await reader.TryReadByteSequenceAsync();
+            if (!hasContent) {
+                return (false, default);
+            }
+
+            var (hasChildren, children) = await reader.TryReadSequenceAsync(reader.TryReadBinaryNodeAsync);
+            if (!hasChildren) {
+                return (false, default);
+            }
+
+            return (true, new BinaryNode(name, new ArrayDeserializer(content), children.ToArray()));
+        } 
     }
 }

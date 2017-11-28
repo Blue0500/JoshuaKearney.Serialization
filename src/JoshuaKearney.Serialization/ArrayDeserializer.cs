@@ -14,8 +14,6 @@ namespace JoshuaKearney.Serialization {
             this.array = array;
         }
 
-        public void Dispose() { }
-
         public bool TryReadBytes(int count, out ArraySegment<byte> buffer) {
             if (this.pos + count > this.array.Count) {
                 buffer = new ArraySegment<byte>(new byte[0]);
@@ -65,5 +63,7 @@ namespace JoshuaKearney.Serialization {
         public async Task WriteToAsync(BinarySerializer writer) {
             await writer.WriteAsync(await this.ReadToEndAsync());
         }
+
+        public override void Dispose() { }
     }
 }

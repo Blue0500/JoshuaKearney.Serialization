@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
-    public abstract class BinarySerializer {
+    public abstract class BinarySerializer : IDisposable {
         public abstract Task WriteAsync(ArraySegment<byte> bytes);
 
         public virtual async Task WriteAsync(Stream stream) {
@@ -19,7 +19,7 @@ namespace JoshuaKearney.Serialization {
         }
 
         public virtual Task<Stream> GetStreamAsync() {
-            return Task.FromResult<Stream>(new SerializationStream(this));
+            return Task.FromResult<Stream>(new IndisposableStream(new SerializationStream(this)));
         }
 
         public static implicit operator BinarySerializer(BinaryWriter writer) {
@@ -29,6 +29,8 @@ namespace JoshuaKearney.Serialization {
         public static implicit operator BinarySerializer(StreamWriter writer) {
             return new StreamSerializer(writer.BaseStream);
         }
+
+        public abstract void Dispose();
     }
 
     public static partial class SerializationExtensions {
@@ -48,13 +50,14 @@ namespace JoshuaKearney.Serialization {
             await writer.WriteAsync(count);
 
             foreach (var potential in writers) {
-                ArraySerializer serializer = new ArraySerializer();
-                await potential(serializer);
+                using (ArraySerializer serializer = new ArraySerializer()) {
+                    await potential(serializer);
 
-                var final = serializer.Close();
+                    var final = serializer.Array;
 
-                await writer.WriteAsync(final.Count);
-                await writer.WriteAsync(final);
+                    await writer.WriteAsync(final.Count);
+                    await writer.WriteAsync(final);
+                }
             }
         }
 

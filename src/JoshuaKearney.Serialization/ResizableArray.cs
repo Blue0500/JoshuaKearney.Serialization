@@ -37,7 +37,11 @@ namespace JoshuaKearney.Serialization {
         }
 
         public void AddRange(ArraySegment<T> array) {
-            if (this.OffSet + this.Count + array.Count > this.Array.Length - 1) {
+            int originalOffset = this.OffSet;
+            int originalCount = this.Count;
+            var originalArray = this.array;
+
+            if (this.OffSet + this.Count + array.Count >= this.Array.Length - this.OffSet) {
                 T[] newArray = new T[this.array.Length + this.Count + array.Count];
                 this.array.CopyTo(newArray, 0);
                 this.array = newArray;
@@ -117,7 +121,7 @@ namespace JoshuaKearney.Serialization {
         }
 
         public void RemoveAt(int index) {
-            T prev = default(T);
+            T prev = default;
 
             for (int i = this.Count - 1; i >= index; i--) {
                 T temp = this[i];
@@ -154,7 +158,10 @@ namespace JoshuaKearney.Serialization {
         }
 
         public ArraySegment<T> ToArraySegment() {
-            return new ArraySegment<T>(this.Array, this.OffSet, this.Count);
+            ArraySegment<T> result = default;
+            result = new ArraySegment<T>(this.Array, this.OffSet, this.Count);
+
+            return result;
         }
 
         private class ResizableArrayEnumerator : IEnumerator<T> {
@@ -162,7 +169,7 @@ namespace JoshuaKearney.Serialization {
             private int pos = 0;
             private int version;
 
-            public T Current { get; private set; } = default(T);
+            public T Current { get; private set; } = default;
 
             object IEnumerator.Current => this.Current;
 
@@ -179,7 +186,7 @@ namespace JoshuaKearney.Serialization {
                 }
 
                 if (this.pos >= this.list.Count) {
-                    this.Current = default(T);
+                    this.Current = default;
                     return false;
                 }
                 else {
