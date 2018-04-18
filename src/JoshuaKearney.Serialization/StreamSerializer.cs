@@ -31,12 +31,18 @@ namespace JoshuaKearney.Serialization {
             return stream.CopyToAsync(this.stream);
         }
 
-        public override Task<Stream> GetStreamAsync() {
+        public override Task<Stream> GetStreamAsync(bool disposedOriginal) {
             if (this.isDisposed) {
                 throw new ObjectDisposedException(nameof(StreamSerializer));
             }
 
-            return Task.FromResult<Stream>(new IndisposableStream(this.stream));
+            Stream ret = this.stream;
+
+            if (!disposedOriginal) {
+                ret = new IndisposableStream(ret);
+            }
+
+            return Task.FromResult(ret);
         }
 
         public override void Dispose() {

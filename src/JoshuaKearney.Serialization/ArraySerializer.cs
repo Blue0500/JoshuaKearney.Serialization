@@ -11,14 +11,11 @@ namespace JoshuaKearney.Serialization {
 
         public override Task WriteAsync(ArraySegment<byte> bytes) {
             this.array.AddRange(bytes);
-
             return Task.CompletedTask;
         }
 
-        public Task WriteToAsync(BinarySerializer writer) {
+        public Task WriteToAsync(IBinarySerializer writer) {
             return writer.WriteAsync(this.array.ToArraySegment());
         }
-
-        public override void Dispose() { }
     }
 }

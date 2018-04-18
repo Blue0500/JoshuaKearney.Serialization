@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 namespace JoshuaKearney.Serialization.Linq {
     public class BinaryNode : IBinarySerializable {
         private BinaryNode parent = null;
-        private List<BinaryNode> children = new List<BinaryNode>();
+        private ArraySegment<byte> content;
+        private readonly List<BinaryNode> children = new List<BinaryNode>();
 
         public string Name { get; }
 
-        public IReadOnlyCollection<BinaryNode> Children => this.children;
-
-        public BinaryDeserializer Content { get; }
+        public IReadOnlyList<BinaryNode> Children => this.children;
 
         public BinaryNode Parent {
             get {
@@ -32,35 +31,66 @@ namespace JoshuaKearney.Serialization.Linq {
 
         public BinaryNode PreviousSibling { get; private set; }
 
+        public BinaryNode this[int index] {
+            get {
+                return this.GetChild(index);
+            }
+        }
+
+        public BinaryNode this[string name] {
+            get {
+                return this.GetChild(name);
+            }
+        }
+
         public BinaryNode(string name, params BinaryNode[] children) {
             this.Name = name;
             this.children = children.ToList();
+            this.content = new ArraySegment<byte>(new byte[0]);
 
-            for (int i = 0; i < children.Length; i++) {
-                children[i].Parent = this;
+            for (int i = 0; i < this.children.Count; i++) {
+                this.children[i].Parent = this;
 
                 if (i > 0) {
-                    children[i - 1].NextSibling = children[i];
+                    this.children[i - 1].NextSibling = this.children[i];
+                    this.children[i].PreviousSibling = this.children[i - 1];
                 }
 
-                if (i < children.Length - 1) {
-                    children[i].NextSibling = children[i + 1];
+                if (i < this.children.Count - 1) {
+                    this.children[i].NextSibling = this.children[i + 1];
+                    this.children[i + 1].PreviousSibling = this.children[i];
                 }
             }
         }
 
-        public BinaryNode(string name, BinaryDeserializer content, params BinaryNode[] children) : this(name, children) {
-            this.Content = content;
+        public BinaryNode(string name, ArraySegment<byte> content, params BinaryNode[] children) : this(name, children) {
+            this.content = content;
         }
 
-        public BinaryNode(string name, BuilderPotential<BinarySerializer> content, params BinaryNode[] children) : this(name, children) {
-            this.Content = new LazyDeserializer(content.AsSerializable());
+        public BinaryNode(string name, IBinarySerializable content, params BinaryNode[] children) : this(name, children) {
+            using (var serial = new ArraySerializer()) {
+                serial.WriteAsync(content).Wait();
+                this.content = serial.Array;
+            }
         }
 
-        public async Task WriteToAsync(BinarySerializer writer) {
+        public BinaryNode(string name, Func<IBinarySerializer, Task> content, params BinaryNode[] children) : this(name, BinarySerializable.Create(content), children) { }
+
+        public IBinaryDeserializer GetContentReader() => new ArrayDeserializer(this.content);
+
+        public IBinarySerializer GetContentWriter() => new BinaryNodeSerializer(this);
+
+        public async Task WriteToAsync(IBinarySerializer writer) {
             await writer.WriteAsync(this.Name);
-            await writer.WriteSequenceAsync(await this.Content.ReadToEndAsync());
-            await writer.WriteSequenceAsync(this.Children, item => item.WriteToAsync(writer));
+
+            if (this.content == null) {
+                await writer.WriteSequenceAsync(new byte[0]);
+            }
+            else {
+                await writer.WriteSequenceAsync(this.content);
+            }
+
+            await writer.WriteSequenceAsync(this.Children);
         }
 
         public void AddSiblingAfter(BinaryNode node) {
@@ -110,37 +140,42 @@ namespace JoshuaKearney.Serialization.Linq {
             return this.children.Remove(node);
         }
 
+        public BinaryNode GetChild(string name) {
+            return this.children.First(x => x.Name == name);
+        }
+
+        public BinaryNode GetChild(int index) {
+            return this.children[index];
+        }
+
         public IEnumerable<BinaryNode> AllDecendents() {
             return this.Children.Concat(this.Children.SelectMany(x => x.AllDecendents()));
+        }
+
+        private class BinaryNodeSerializer : ArraySerializer {
+            private BinaryNode node;
+
+            public BinaryNodeSerializer(BinaryNode node) {
+                this.node = node;
+            }
+
+            public override void Dispose() {
+                if (!this.IsDisposed) {
+                    node.content = this.Array;
+                }
+
+                base.Dispose();
+            }
         }
     }
 
     public static partial class SerializationExtensions {
-        public static async Task<BinaryNode> ReadBinaryNodeAsync(this BinaryDeserializer reader) {
+        public static async Task<BinaryNode> ReadBinaryNodeAsync(this IBinaryDeserializer reader) {
             string name = await reader.ReadStringAsync();
-            var content = new ArrayDeserializer(await reader.ReadByteSequenceAsync());
-            var children = await reader.ReadSequenceAsync(reader.ReadBinaryNodeAsync);
+            var content = await reader.ReadByteSequenceAsync();
+            var children = await reader.ReadSequenceAsync(rd => rd.ReadBinaryNodeAsync());
 
             return new BinaryNode(name, content, children.ToArray());
         }
-
-        public static async Task<(bool success, BinaryNode node)> TryReadBinaryNodeAsync(this BinaryDeserializer reader) {
-            var (hasName, name) = await reader.TryReadStringAsync();
-            if (!hasName) {
-                return (false, default);
-            }
-
-            var (hasContent, content) = await reader.TryReadByteSequenceAsync();
-            if (!hasContent) {
-                return (false, default);
-            }
-
-            var (hasChildren, children) = await reader.TryReadSequenceAsync(reader.TryReadBinaryNodeAsync);
-            if (!hasChildren) {
-                return (false, default);
-            }
-
-            return (true, new BinaryNode(name, new ArrayDeserializer(content), children.ToArray()));
-        } 
     }
 }

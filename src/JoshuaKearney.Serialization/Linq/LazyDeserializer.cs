@@ -1,109 +1,107 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace JoshuaKearney.Serialization.Linq {
-    internal class LazyDeserializer : BinaryDeserializer, IBinarySerializable {
-        private bool isDisposed = false;
-        private IBinarySerializable content;
-        private ArrayDeserializer deserializer;
+//namespace JoshuaKearney.Serialization.Linq {
+//    internal class LazyDeserializer : BinaryDeserializer, IBinarySerializable {
+//        private bool isDisposed = false;
+//        private IBinarySerializable content;
+//        private ArrayDeserializer deserializer;
 
-        public LazyDeserializer(IBinarySerializable content) {
-            this.content = content;
-        }
+//        public LazyDeserializer(IBinarySerializable content) {
+//            this.content = content;
+//        }
 
-        public override async Task<ArraySegment<byte>> ReadToEndAsync() {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task<ArraySegment<byte>> ReadToEndAsync() {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            return await this.deserializer.ReadToEndAsync();
-        }
+//            return await this.deserializer.ReadToEndAsync();
+//        }
 
-        public override async Task<Stream> GetStreamAsync() {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task<Stream> GetStreamAsync(bool disposeOriginal = false) {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            return await this.deserializer.GetStreamAsync();
-        }
+//            return await this.deserializer.GetStreamAsync(disposeOriginal);
+//        }
 
-        public override async Task ResetAsync() {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task ResetAsync() {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            await this.deserializer.ResetAsync();
-        }
+//            await this.deserializer.ResetAsync();
+//        }
 
-        public override async Task<int> TryReadBytesAsync(ArraySegment<byte> result) {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task<int> ReadBytesAsync(ArraySegment<byte> result) {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            return await this.deserializer.TryReadBytesAsync(result);
-        }
+//            return await this.deserializer.ReadBytesAsync(result);
+//        }
 
-        public override async Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task<ArraySegment<byte>> ReadBytesAsync(int count) {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            return await this.deserializer.TryReadBytesAsync(count);
-        }
+//            return await this.deserializer.ReadBytesAsync(count);
+//        }
 
-        public async Task WriteToAsync(BinarySerializer writer) {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(LazyDeserializer));
-            }
+//        public override async Task WriteToAsync(IBinarySerializer writer) {
+//            if (this.isDisposed) {
+//                throw new ObjectDisposedException(nameof(LazyDeserializer));
+//            }
 
-            if (this.deserializer == null) {
-                await this.InitializeDeserializer();
-            }
+//            if (this.deserializer == null) {
+//                await this.InitializeDeserializer();
+//            }
 
-            await this.deserializer.WriteToAsync(writer);
-        }
+//            await this.deserializer.WriteToAsync(writer);
+//        }
 
-        private async Task InitializeDeserializer() {
-            using (ArraySerializer serial = new ArraySerializer()) {
-                await serial.WriteAsync(this.content);
-                this.deserializer = new ArrayDeserializer(serial.Array);
-                this.content = null;
-            }
-        }
+//        private async Task InitializeDeserializer() {
+//            using (ArraySerializer serial = new ArraySerializer()) {
+//                await serial.WriteAsync(this.content);
+//                this.deserializer = new ArrayDeserializer(serial.Array);
+//                this.content = null;
+//            }
+//        }
 
-        public override void Dispose() {
-            if (this.isDisposed) {
-                return;
-            }
+//        public override void Dispose() {
+//            if (this.isDisposed) {
+//                return;
+//            }
 
-            this.isDisposed = true;
-            this.deserializer.Dispose();
-            this.content = null;
-
-            GC.SuppressFinalize(this);
-        }
-    }
-}
+//            this.isDisposed = true;
+//            this.deserializer?.Dispose();
+//            this.content = null;
+//        }
+//    }
+//}

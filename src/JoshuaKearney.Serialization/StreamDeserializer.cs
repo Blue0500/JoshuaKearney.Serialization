@@ -29,24 +29,21 @@ namespace JoshuaKearney.Serialization {
             return data.ToArraySegment();
         }
 
-        public override Task<Stream> GetStreamAsync() {
+        public override Task<Stream> GetStreamAsync(bool disposeOriginal) {
             if (this.isDisposed) {
                 throw new ObjectDisposedException(nameof(StreamDeserializer));
             }
 
-            return Task.FromResult<Stream>(new IndisposableStream(this.stream));
-        }
+            Stream ret = this.stream;
 
-        public override Task ResetAsync() {
-            if (this.isDisposed) {
-                throw new ObjectDisposedException(nameof(StreamDeserializer));
+            if (!disposeOriginal) {
+                ret = new IndisposableStream(ret);
             }
 
-            this.stream.Position = 0;
-            return Task.CompletedTask;
+            return Task.FromResult(ret);
         }
 
-        public override async Task<int> TryReadBytesAsync(ArraySegment<byte> buffer) {
+        public override async Task<int> ReadBytesAsync(ArraySegment<byte> buffer) {
             if (this.isDisposed) {
                 throw new ObjectDisposedException(nameof(StreamDeserializer));
             }
@@ -77,19 +74,18 @@ namespace JoshuaKearney.Serialization {
             }
         }
 
-        public override Task<ArraySegment<byte>> TryReadBytesAsync(int count) {
+        public async override Task<ArraySegment<byte>> ReadBytesAsync(int count) {
             if (this.isDisposed) {
                 throw new ObjectDisposedException(nameof(StreamDeserializer));
             }
 
             ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[count]);
+            int read = await this.ReadBytesAsync(buffer);
 
-            return this.TryReadBytesAsync(buffer).ContinueWith(task => {
-                return new ArraySegment<byte>(buffer.Array, buffer.Offset, task.Result);
-            });
+            return new ArraySegment<byte>(buffer.Array, buffer.Offset, read);
         }
 
-        public async Task WriteToAsync(BinarySerializer writer) {
+        public override async Task WriteToAsync(IBinarySerializer writer) {
             if (this.isDisposed) {
                 throw new ObjectDisposedException(nameof(StreamDeserializer));
             }

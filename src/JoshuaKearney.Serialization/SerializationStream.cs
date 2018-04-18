@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 
 namespace JoshuaKearney.Serialization {
     internal class SerializationStream : Stream {
-        private BinarySerializer serializer = null;
-        private BinaryDeserializer deserializer = null;
+        private IBinarySerializer serializer = null;
+        private IBinaryDeserializer deserializer = null;
 
-        public SerializationStream(BinarySerializer serializer) {
+        public SerializationStream(IBinarySerializer serializer) {
             this.serializer = serializer;
         }
 
-        public SerializationStream(BinaryDeserializer deserializer) {
+        public SerializationStream(IBinarySerializer serializer, IBinaryDeserializer deserializer) {
+            this.serializer = serializer;
+            this.deserializer = deserializer;
+        }
+
+        public SerializationStream(IBinaryDeserializer deserializer) {
             this.deserializer = deserializer;
         }
 
@@ -43,7 +48,7 @@ namespace JoshuaKearney.Serialization {
                 throw new InvalidOperationException();
             }
 
-            return this.deserializer.TryReadBytesAsync(new ArraySegment<byte>(buffer, offset, count));
+            return this.deserializer.ReadBytesAsync(new ArraySegment<byte>(buffer, offset, count));
         }
 
         public override long Seek(long offset, SeekOrigin origin) {
