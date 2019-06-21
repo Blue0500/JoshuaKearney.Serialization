@@ -44,44 +44,12 @@ namespace JoshuaKearney.Serialization {
     }
 
     public static partial class SerializationExtensions {
-        public static async Task WriteSectorsAsync(this IBinarySerializer writer, IEnumerable<BuilderPotential<IBinarySerializer>> writers) {
-            int count;
-
-            if (writers is ICollection<IBinarySerializer> collection) {
-                count = collection.Count;
-            }
-            else if (writers is IReadOnlyCollection<IBinarySerializer> readCollection) {
-                count = readCollection.Count;
-            }
-            else {
-                count = writers.Count();
-            }
-
-            await writer.WriteAsync(count);
-
-            foreach (var potential in writers) {
-                using (ArraySerializer serializer = new ArraySerializer()) {
-                    await potential(serializer);
-
-                    var final = serializer.Array;
-
-                    await writer.WriteAsync(final.Count);
-                    await writer.WriteAsync(final);
-                }
-            }
-        }
-
-        public static Task WriteSectorsAsync(this IBinarySerializer writer, params BuilderPotential<IBinarySerializer>[] writers) {
-            return writer.WriteSectorsAsync((IEnumerable<BuilderPotential<IBinarySerializer>>)writers);
-        }
-
         public static Task WriteAsync(this IBinarySerializer writer, IBinarySerializable writable) {
             return writable.WriteToAsync(writer);
         }
 
-        public static Task WriteAsync(this IBinarySerializer writer, BuilderPotential<IBinarySerializer> potential) {
-            // TODO - Fix this
-            return potential(writer);
+        public static Task WriteAsync(this IBinarySerializer writer, Func<IBinarySerializer, Task> func) {
+            return func(writer);
         }
 
         public static Task WriteAsync(this IBinarySerializer writer, byte[] bytes) {

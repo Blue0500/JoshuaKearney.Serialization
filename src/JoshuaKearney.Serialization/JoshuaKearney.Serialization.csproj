@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.5;net462</TargetFrameworks>
-    <Version>1.3.4-alpha</Version>
+    <TargetFrameworks>netstandard1.5;net462;net471</TargetFrameworks>
+    <Version>1.4.0-alpha</Version>
     <Authors>Josh Kearney</Authors>
     <Title>JoshuaKearney.Serialization</Title>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -12,9 +12,9 @@
     <Copyright>Copyright © 2017 Josh Kearney</Copyright>
     <Company>Josh Kearney</Company>
     <Description>A small library to make serialization and deserialization to bytes simpler and easier</Description>
-    <AssemblyVersion>1.3.4.0</AssemblyVersion>
-    <FileVersion>1.3.4.0</FileVersion>
-    <Platforms>AnyCPU;x64</Platforms>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -22,10 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JoshuaKearney.Core" Version="2.2.1-alpha" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
     <PackageReference Include="System.Buffers" Version="4.5.0-preview1-25914-04" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0-preview1-26216-02" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'!='net471'">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0-preview1-26216-02" />
+  </ItemGroup>
 </Project>

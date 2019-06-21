@@ -53,23 +53,6 @@ namespace JoshuaKearney.Serialization {
             return deserial.ReadBytesAsync(new ArraySegment<byte>(buffer));
         }
 
-        public static Task ReadAsync(this IBinaryDeserializer reader, BuilderPotential<IBinaryDeserializer> potential) {
-            return potential(reader);
-        }
-
-        public static async Task<IReadOnlyList<IBinaryDeserializer>> ReadSectorsAsync(this IBinaryDeserializer reader) {
-            int count = await reader.ReadInt32Async();
-            List<IBinaryDeserializer> deserializers = new List<IBinaryDeserializer>();
-
-            for (int i = 0; i < count; i++) {
-                int length = await reader.ReadInt32Async();
-                var bytes = await reader.ReadBytesAsync(length);
-                deserializers.Add(new ArrayDeserializer(bytes));
-            }
-
-            return deserializers;
-        }
-
         public static async Task<byte> ReadByteAsync(this IBinaryDeserializer reader) {
             return (await reader.ReadBytesAsync(1)).First();
         }

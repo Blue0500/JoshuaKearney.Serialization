@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>JoshuaKearney.Serialization</id>
+    <version>1.4.0-alpha</version>
+    <title>JoshuaKearney.Serialization</title>
+    <authors>Josh Kearney</authors>
+    <owners>Josh Kearney</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://raw.githubusercontent.com/Blue0500/JoshuaKearney.Serialization/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Blue0500/JoshuaKearney.Serialization</projectUrl>
+    <description>A small library to make serialization and deserialization to bytes simpler and easier</description>
+    <copyright>Copyright © 2017 Josh Kearney</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="System.Buffers" version="4.5.0-preview1-25914-04" exclude="Build,Analyzers" />
+        <dependency id="System.ValueTuple" version="4.5.0-preview1-26216-02" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7.1">
+        <dependency id="System.Buffers" version="4.5.0-preview1-25914-04" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.5.0-preview1-25914-04" exclude="Build,Analyzers" />
+        <dependency id="System.ValueTuple" version="4.5.0-preview1-26216-02" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\joshw\source\repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\net462\JoshuaKearney.Serialization.dll" target="lib\net462\JoshuaKearney.Serialization.dll" />
+    <file src="C:\Users\joshw\source\repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\net471\JoshuaKearney.Serialization.dll" target="lib\net471\JoshuaKearney.Serialization.dll" />
+    <file src="C:\Users\joshw\source\repos\JoshuaKearney.Serialization\src\JoshuaKearney.Serialization\bin\Release\netstandard1.5\JoshuaKearney.Serialization.dll" target="lib\netstandard1.5\JoshuaKearney.Serialization.dll" />
+  </files>
+</package>

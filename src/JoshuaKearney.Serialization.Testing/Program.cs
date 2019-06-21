@@ -11,7 +11,7 @@ namespace JoshuaKearney.Serialization.Testing {
         static Aes aes = Aes.Create();
 
         static void Main(string[] args) {
-            var node = new BinaryNode("s")
+            var node = new BinaryNode("s");
 
             //aes.KeySize = 256;
             //aes.GenerateKey();
@@ -35,29 +35,27 @@ namespace JoshuaKearney.Serialization.Testing {
                 encrypted = ms.ToArray();
             }
 
-            using (var ms = new MemoryStream(encrypted.Array, encrypted.Offset, encrypted.Count)) {
-                using (var crypto = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read)) {
-                    using (StreamReader reader = new StreamReader(crypto)) {
-                        Console.WriteLine(await reader.ReadLineAsync());
-                    }
-                }
+            using (var ms = new MemoryStream(encrypted.Array, encrypted.Offset, encrypted.Count)) 
+            using (var crypto = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read)) 
+            using (StreamReader reader = new StreamReader(crypto)) {
+                Console.WriteLine(await reader.ReadLineAsync());
             }
         }
 
         static async Task Run() {
-            var serial = new ArraySerializer();
+            //var serial = new ArraySerializer();
 
-            using (var crypto = serial.Encrypt(aes.CreateEncryptor()))
-            using (var comp = crypto.CompressDeflate()) {  
-                await comp.WriteAsync("Hello, World!");
-                await comp.WriteAsync(0);
-            }
+            //using (var crypto = serial.Encrypt(aes.CreateEncryptor()))
+            //using (var comp = crypto.CompressDeflate()) {  
+            //    await comp.WriteAsync("Hello, World!");
+            //    await comp.WriteAsync(0);
+            //}
 
-            using (var decomp = new ArrayDeserializer(serial.Array).Decrypt(aes.CreateDecryptor()))
-            using (var crypto = decomp.DecompressDeflate()) { 
-                Console.WriteLine(await crypto.ReadStringAsync());
-                Console.WriteLine(await crypto.ReadBooleanAsync());
-            }
+            //using (var decomp = new ArrayDeserializer(serial.Array).Decrypt(aes.CreateDecryptor()))
+            //using (var crypto = decomp.DecompressDeflate()) { 
+            //    Console.WriteLine(await crypto.ReadStringAsync());
+            //    Console.WriteLine(await crypto.ReadBooleanAsync());
+            //}
         }
     }
 }
